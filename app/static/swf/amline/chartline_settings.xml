@@ -15,7 +15,7 @@
 
 <error_messages>
     <enabled>true</enabled>
-    <color>#CC0000</color>
+    <color>#FF0000</color>
     <alpha>10</alpha>
     <text_color>#000000</text_color>
 </error_messages>

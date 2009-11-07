@@ -3,6 +3,9 @@ import time
 
 from src import tz, store
 
+GRAPH_COLORS = ('#FF0000', '#0000FF', '#00FF00', '#FF9900',
+        '#CC00CC', '#00CCCC', '#33FF00', '#990000', '#000066')
+
 class Chart(object):
     def __init__(self, name, keys, options=None):
         self.name = name
@@ -11,6 +14,10 @@ class Chart(object):
             self.options = options
         else:
             self.options = ({},) * len(keys)
+
+        for graph_options, color in zip(self.options, GRAPH_COLORS):
+            graph_options['color'] = color
+            graph_options['color_hover'] = color
 
 CHARTS = (
         Chart(u'Load averages', ('loadAvrg',)),
