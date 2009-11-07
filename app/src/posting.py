@@ -14,7 +14,7 @@ def update_stats(data):
     server_id = _check_server_secret(agentKey)
 
     current_time = int(time.time())
-    source_values = _collect_values(data['stats'])
+    source_values = data['stats']
     logging.debug('collected sources: %s', source_values)
 
     _fill_stage(server_id, 0, source_values, current_time)
@@ -32,21 +32,6 @@ def _fill_stage(server_id, stage_index, source_values, current_time):
             _fill_stage(server_id, stage_index + 1, avg_values, current_time)
 
     _add_values(stage, source_values)
-
-
-def _collect_values(stats):
-    """Returns a dict with the source:value pairs.
-    """
-    #TODO: use more sources
-    SOURCES = ['loadAvrg', 'processCnt', 'memPhysUsed', 'memPhysFree', 'memCached']
-    source_values = {}
-    for source in SOURCES:
-        value = stats.get(source)
-        if value is not None:
-            source_values[source] = float(value)
-
-    return source_values
-
 
 def _add_values(stage, source_values):
     """Adds the measured values to the staging area.

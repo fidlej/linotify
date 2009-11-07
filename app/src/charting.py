@@ -22,10 +22,12 @@ class Chart(object):
 CHARTS = (
         Chart(u'Load averages', ('loadAvrg',)),
         Chart(u'Processes', ('processCnt',)),
-        Chart(u'Physical memory', ('memPhysUsed', 'memPhysFree', 'memCached',),
+        Chart(u'Physical memory', ('memUsed', 'memFree', 'memCached',
+            'memBuffers'),
             ({'balloon_text': 'Used: {value}MB'},
             {'balloon_text': 'Free: {value}MB'},
-            {'balloon_text': 'Cached: {value}MB'})),
+            {'balloon_text': 'Cached: {value}MB'},
+            {'balloon_text': 'Buffers: {value}MB'})),
         )
 
 def get_from_to_times():
