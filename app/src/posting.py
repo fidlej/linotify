@@ -10,11 +10,11 @@ def parse_payload(payload):
     return simplejson.loads(payload)
 
 def update_stats(data):
-    agentKey = data['agentKey']
+    agentKey = data['serverKey']
     server_id = _check_server_secret(agentKey)
 
     current_time = int(time.time())
-    source_values = _collect_values(data)
+    source_values = _collect_values(data['stats'])
     logging.debug('collected sources: %s', source_values)
 
     _fill_stage(server_id, 0, source_values, current_time)
@@ -34,18 +34,17 @@ def _fill_stage(server_id, stage_index, source_values, current_time):
     _add_values(stage, source_values)
 
 
-def _collect_values(data):
+def _collect_values(stats):
     """Returns a dict with the source:value pairs.
     """
     #TODO: use more sources
-    SOURCES = ['loadAvrg', 'memPhysUsed', 'memPhysFree', 'memCached']
+    SOURCES = ['loadAvrg', 'processCnt', 'memPhysUsed', 'memPhysFree', 'memCached']
     source_values = {}
     for source in SOURCES:
-        value = data.get(source)
+        value = stats.get(source)
         if value is not None:
             source_values[source] = float(value)
 
-    source_values['processCnt'] = float(len(data['processes']))
     return source_values
 
 

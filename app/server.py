@@ -118,7 +118,7 @@ app = webapp.WSGIApplication(
             ('/my/servers/view/(.*)', ServerView),
             ('/my/servers/chartdata/(.*)', ServerChartdata),
             ('/cron/notice', Notice),
-            ('/postback/', Postback),
+            ('/postback', Postback),
             ('/.*', CatchAll),
         ],
         debug=config.DEBUG)
