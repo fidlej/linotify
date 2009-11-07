@@ -4,6 +4,7 @@ Usage: %prog
 Sends server statistics to a HTTP URL.
 """
 
+import os.path
 import optparse
 import logging
 
@@ -11,7 +12,8 @@ from libagent import measuring, sending, configuring
 
 VERSION = '0.2.0'
 POSTBACK_URL = 'http://www.linotify.com/postback'
-CONFIG_FILENAME = 'config.cfg'
+CONFIG_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+        'config.cfg')
 
 def _parse_args():
     parser = optparse.OptionParser(__doc__)
