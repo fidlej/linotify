@@ -7,9 +7,10 @@ GRAPH_COLORS = ('#FF0000', '#0000FF', '#00FF00', '#FF9900',
         '#CC00CC', '#00CCCC', '#33FF00', '#990000', '#000066')
 
 class Chart(object):
-    def __init__(self, name, keys, options=None):
+    def __init__(self, name, keys, options=None, precision=2):
         self.name = name
         self.keys = keys
+        self.precision = precision
         if options is not None:
             self.options = options
         else:
@@ -21,13 +22,13 @@ class Chart(object):
 
 CHARTS = (
         Chart(u'Load averages', ('loadAvrg',)),
-        Chart(u'Processes', ('processCnt',)),
-        Chart(u'Physical memory', ('memUsed', 'memFree', 'memCached',
-            'memBuffers'),
+        Chart(u'Processes', ('processCnt',), None, precision=0),
+        Chart(u'Physical memory',
+            ('memUsed', 'memFree', 'memCached', 'memBuffers'),
             ({'balloon_text': 'Used: {value}MB'},
             {'balloon_text': 'Free: {value}MB'},
             {'balloon_text': 'Cached: {value}MB'},
-            {'balloon_text': 'Buffers: {value}MB'})),
+            {'balloon_text': 'Buffers: {value}MB'}), precision=0),
         )
 
 def get_from_to_times():

@@ -9,7 +9,7 @@
 %for graph, graph_options in zip(graphs, options):
 <graph line_width="2"${formatting.attributes(graph_options)|n}>
     %for t, value in graph:
-    <value xid="${t}">${formatting.point(value)}</value>
+    <value xid="${t}">${formatting.point(value, chart.precision)}</value>
     %endfor%
 </graph>
 %endfor%

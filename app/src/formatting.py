@@ -21,8 +21,8 @@ def date_ym(timestamp):
     """
     return time.strftime('%Y-%m-%d %H:%M', usertime(timestamp))
 
-def point(value):
-    return '%.2f' % value
+def point(value, precision):
+    return '%.*f' % (precision, value)
 
 def ago(seconds_ago):
     #TODO: switch to hours for big intervals
