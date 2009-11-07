@@ -1,0 +1,5 @@
+cron:
+#- description: Cron to notice alert states.
+#  url: /notice
+#  schedule: every 1 minutes
+

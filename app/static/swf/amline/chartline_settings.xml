@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+<js_enabled>false</js_enabled>
+<font>Trebuchet MS</font>
+<decimals_separator>.</decimals_separator>
+<thousands_separator>,</thousands_separator>
+
+<indicator>
+    <color>#3366CC</color>
+</indicator>
+
+<legend>
+    <enabled>false</enabled>
+</legend>
+
+<error_messages>
+    <enabled>true</enabled>
+    <color>#CC0000</color>
+    <alpha>10</alpha>
+    <text_color>#000000</text_color>
+</error_messages>
+</settings>

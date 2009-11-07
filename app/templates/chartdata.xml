@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chart>
+<series>
+%for t in timestamps:
+<value xid="${t}">${formatting.date_ym(t)}</value>
+%endfor%
+</series>
+<graphs>
+%for graph, graph_options in zip(graphs, options):
+<graph line_width="2"${formatting.attributes(graph_options)|n}>
+    %for t, value in graph:
+    <value xid="${t}">${formatting.point(value)}</value>
+    %endfor%
+</graph>
+%endfor%
+</graphs>
+</chart>

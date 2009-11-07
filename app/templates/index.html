@@ -1,0 +1,14 @@
+<%inherit file="base.html"/>
+
+%if user:
+<p>
+    Hello ${user.nickname()}.<br/>
+    See <a href="/my/servers">your servers</a>.
+</p>
+%else:
+<p>
+    Linotify collects data from your servers.
+    You get nice graphs with CPU load, memory usage, ...<br/>
+    Start monitoring your servers <a href="/my/servers">after login</a>.
+</p>
+%endif%

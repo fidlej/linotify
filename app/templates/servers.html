@@ -1,0 +1,15 @@
+<%inherit file="base.html"/>
+
+<table>
+<tr><th>Name</th></tr>
+%for server in servers:
+    <tr><td><a href="/my/servers/view/${server.id()}" title="View the server">${server.name}</a></td></tr>
+%endfor%
+</table>
+
+<form method="post" action="/my/servers/add">
+<p>
+    <input type="text" name="name"/>
+    <input type="submit" value="Add Server"/>
+</p>
+</form>

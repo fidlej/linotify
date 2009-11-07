@@ -1,0 +1,80 @@
+
+import time
+
+from src import tz, store
+
+class Chart(object):
+    def __init__(self, name, keys, options=None):
+        self.name = name
+        self.keys = keys
+        if options is not None:
+            self.options = options
+        else:
+            self.options = ({},) * len(keys)
+
+CHARTS = (
+        Chart(u'Load averages', ('loadAvrg',)),
+        Chart(u'Processes', ('processCnt',)),
+        Chart(u'Physical memory', ('memPhysUsed', 'memPhysFree', 'memCached',),
+            ({'balloon_text': 'Used: {value}MB'},
+            {'balloon_text': 'Free: {value}MB'},
+            {'balloon_text': 'Cached: {value}MB'})),
+        )
+
+def get_from_to_times():
+    now = int(time.time())
+    time_from = tz.day_start(now)
+    time_to = time_from + tz.DAY_SECONDS
+    return time_from, time_to
+
+def generate_timestamps(time_from, time_to):
+    duration = _get_usable_duration(time_to - time_from)
+    if duration is None:
+        duration = stage.STAGE_DURATIONS[-1]
+        time_from = time_to - duration * store.LIMIT
+
+    timestamps = []
+    t = _round_upto_duration(time_from, duration)
+    while t <= time_to:
+        timestamps.append(t)
+        t += duration
+    return timestamps
+
+def get_chart_graphs(server_id, chart, timestamps):
+    """Returns a list of (timestamp, value) pairs
+    for every key defined in the chart.
+    """
+    if len(timestamps) < 2:
+        return []
+
+    time_from = timestamps[0]
+    time_to = timestamps[-1]
+    duration = timestamps[1] - time_from
+
+    points = store.get_points(server_id, duration, time_from, time_to)
+    graphs = {}
+    for key in chart.keys:
+        graphs[key] = []
+
+    for point in points:
+        timestamp = point.get_timestamp()
+        source_values = point.get_values()
+        for key in chart.keys:
+            value = source_values.get(key)
+            if value is not None:
+                graphs[key].append((timestamp, value))
+
+    # The lists are returned in a fixed order.
+    return [graphs[key] for key in chart.keys]
+
+def _round_upto_duration(timestamp, duration):
+    return timestamp + timestamp % duration
+
+def _get_usable_duration(interval):
+    for duration in store.STAGE_DURATIONS:
+        num_points = interval // duration
+        if num_points <= store.LIMIT:
+            return duration
+
+    return None
+

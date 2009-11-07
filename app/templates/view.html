@@ -1,0 +1,41 @@
+<%inherit file="base.html"/>
+
+<p>
+%if last_data_at is not None:
+Last data received: ${formatting.date_ys(last_data_at)}
+(${formatting.ago(seconds_ago)}).
+    %if seconds_ago >= 600:
+<br/>${self.agent_help()}
+    %endif%
+%else:
+No data received yet.
+${self.agent_help()}
+%endif%
+</p>
+
+%for i, chart in enumerate(charts):
+<h2>${chart.name}</h2>
+<div id="chart_${i}">
+</div>
+%endfor%
+
+<%def name="script()">
+${parent.script()}
+<script type="text/javascript" src="/static/js/swfobject.js"></script>
+%for i, chart in enumerate(charts):
+<script type="text/javascript">
+// <![CDATA[
+document.getElementById("chart_${i}").innerHTML = "You need to <a href=\"http://get.adobe.com/flashplayer/\">upgrade your Flash Player<\/a>!";
+var so = new SWFObject("/static/swf/amline/amline.swf", "chart_${i}", "800", "400", "8", "#FFFFFF");
+so.addParam("wmode", "transparent");
+so.addVariable("path", "/static/swf/amline/");
+so.addVariable("settings_file", encodeURIComponent("/static/swf/amline/chartline_settings.xml"));
+so.addVariable("data_file", encodeURIComponent("/my/servers/chartdata/${server.id()}?chart=${i}&time_from=${time_from}&time_to=${time_to}"));
+so.write("chart_${i}");
+// ]]>
+</script>
+%endfor%
+</%def>
+<%def name="agent_help()">
+Set the <a href="/my/servers/agent/${server.id()}">Linotify agent on the server</a>.
+</%def>

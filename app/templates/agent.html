@@ -1,0 +1,25 @@
+<%inherit file="base.html"/>
+
+%if added:
+<p>
+Server '${server.name}' was successfully added.
+</p>
+%endif%
+
+<p>
+Run <a href="/static/download/linotify-agent.tar.gz">linotify-agent.tar.gz</a> on your server to send the stats.<br/>
+Use <b>agent_key: ${server.get_secret_key()}</b> in its config.cfg.
+</p>
+<h2>Agent usage</h2>
+<pre>
+wget http://www.linotify.com/static/download/linotify-agent.tar.gz
+tar xzf linotify-agent.tar.gz
+cd linotify-agent
+sed -i -e 's/^agent_key:.*/agent_key: ${server.get_secret_key()}/' config.cfg
+./agent.py start
+</pre>
+
+<p>
+<br/>
+The received data will be then visible on <a href="/my/servers/view/${server.id()}">server graphs</a>.
+</p>

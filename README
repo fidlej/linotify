@@ -1,0 +1,12 @@
+Linotify
+========
+Linotify is a Google App Engine application that collects stats
+from your servers.
+
+It runs at:
+http://www.linotify.com/
+
+Author:
+Ivo Danihelka
+<ivo@danihelka.net>
+
