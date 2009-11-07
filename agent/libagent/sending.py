@@ -17,10 +17,19 @@ def send_payload(payload, url):
     data = urllib.urlencode(data)
 
     request = urllib2.Request(url, data, headers=HEADERS)
-    response = urllib2.urlopen(request)
-    response = response.read()
-    if response != 'OK':
-        raise ValueError('Unexpected postback response: %r' % response)
-    else:
-        logging.debug('Success')
+    try:
+        response = urllib2.urlopen(request)
+        result = response.read()
+        if result != 'OK':
+            raise Exception('Unexpected postback response: %r' % result)
+        else:
+            logging.debug('Success')
+
+    except urllib2.HTTPError, e:
+        if hasattr(e, 'read'):
+            result = e.read()
+            msg = '%s: %s' % (e, result)
+        else:
+            msg = str(e)
+        raise Exception(msg)
 

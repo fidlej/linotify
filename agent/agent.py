@@ -44,10 +44,14 @@ def main():
     stats = measuring.measure_stats()
     payload = _prepare_payload(config.SERVER_KEY, stats)
 
-    if not options.dry_run:
-        sending.send_payload(payload, options.url)
-    else:
+    if options.dry_run:
         print 'payload:', payload
+        return
+
+    try:
+        sending.send_payload(payload, options.url)
+    except Exception, e:
+        logging.error('Unable to send the stats: %s', e)
 
 if __name__ == '__main__':
     main()
