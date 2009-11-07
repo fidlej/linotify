@@ -8,15 +8,25 @@ Server '${server.name}' was successfully added.
 
 <p>
 Run <a href="/static/download/linotify-agent.tar.gz">linotify-agent.tar.gz</a> on your server to send the stats.<br/>
-Use <b>agent_key: ${server.get_secret_key()}</b> in its config.cfg.
+Use <b>SERVER_KEY = '${server.get_secret_key()}'</b> in its libagent/config.py.
 </p>
 <h2>Agent usage</h2>
+<p>
+Prepare it:
+</p>
 <pre>
 wget http://www.linotify.com/static/download/linotify-agent.tar.gz
 tar xzf linotify-agent.tar.gz
 cd linotify-agent
-sed -i -e 's/^agent_key:.*/agent_key: ${server.get_secret_key()}/' config.cfg
-./agent.py start
+sed -i -e 's/^SERVER_KEY.*/SERVER_KEY = "${server.get_secret_key()}"/' libagent/config.py
+./agent.py -v
+</pre>
+
+<p>
+Schedule it by cron to run every minute:
+</p>
+<pre>
+(crontab -l ; echo "* * * * * `pwd`/agent.py") | crontab -
 </pre>
 
 <p>
