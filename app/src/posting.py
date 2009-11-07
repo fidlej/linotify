@@ -93,8 +93,8 @@ def _check_server_secret(agentKey):
         server = Server.get_by_id(server_id)
 
     if not server or server.secret != secret:
-        logging.info("Invalid agentKey: %s", agentKey)
-        raise store.NotFoundError("Invalid agentKey: %s" % agentKey)
+        logging.info("Invalid serverKey: %s", agentKey)
+        raise store.NotFoundError("Invalid serverKey: %s" % agentKey)
 
     return server_id
 
