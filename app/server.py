@@ -19,7 +19,11 @@ class Handler(webapp.RequestHandler):
         if isinstance(e, store.NotFoundError):
             logging.debug("NotFound: %s", e)
             self.error(404)
-            self.render('404.html', title='404: Not found')
+            if self.request.method == 'GET':
+                self.render('404.html', title='404: Not found')
+            else:
+                self.show(str(e))
+
             return
         webapp.RequestHandler.handle_exception(self, e, debug_mode)
 
