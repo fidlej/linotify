@@ -42,7 +42,7 @@ def main():
     payload = _prepare_payload(config.SERVER_KEY, stats)
 
     if not options.dry_run:
-        sending.send_data(payload, options.url)
+        sending.send_payload(payload, options.url)
     else:
         import pprint
         pprint.pprint(payload)

@@ -2,7 +2,7 @@
 def measure_stats():
     return {
             'loadAvrg': _measure_load(),
-            'processesCnt': _measure_num_processes(),
+            'processCnt': _measure_num_processes(),
             }
 
 def _measure_load():
