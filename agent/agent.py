@@ -9,6 +9,8 @@ import logging
 
 from libagent import measuring, sending, config
 
+VERSION = '0.2.0'
+
 def _parse_args():
     parser = optparse.OptionParser(__doc__)
     parser.add_option('-v', '--verbose', action='count', dest='verbosity',
@@ -31,6 +33,7 @@ def _set_logging(verbosity):
 
 def _prepare_payload(server_key, stats):
     return {
+            'version': VERSION,
             'serverKey': server_key,
             'stats': stats,
             }
