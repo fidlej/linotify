@@ -7,19 +7,23 @@ Sends server statistics to a HTTP URL.
 import optparse
 import logging
 
-from libagent import measuring, sending, config
+from libagent import measuring, sending, configuring
 
 VERSION = '0.2.0'
+POSTBACK_URL = 'http://localhost:9999/postback'
+CONFIG_FILENAME = 'config.cfg'
 
 def _parse_args():
     parser = optparse.OptionParser(__doc__)
     parser.add_option('-v', '--verbose', action='count', dest='verbosity',
             help='increase verbosity')
     parser.add_option('-u', '--url',
-            help='the destination URL (default=%s)' % config.POSTBACK_URL)
+            help='the destination URL (default=%s)' % POSTBACK_URL)
+    parser.add_option('-c', '--config',
+            help='use different config (default=%s)' % CONFIG_FILENAME)
     parser.add_option('-n', '--dry-run', action='store_true',
             help="don't send anything")
-    parser.set_defaults(verbosity=0, url=config.POSTBACK_URL)
+    parser.set_defaults(verbosity=0, url=POSTBACK_URL, config=CONFIG_FILENAME)
 
     options, args = parser.parse_args()
     if len(args) != 0:
@@ -41,8 +45,9 @@ def _prepare_payload(server_key, stats):
 def main():
     options = _parse_args()
     _set_logging(options.verbosity)
+    config = configuring.read_config(options.config)
     stats = measuring.measure_stats()
-    payload = _prepare_payload(config.SERVER_KEY, stats)
+    payload = _prepare_payload(config['serverKey'], stats)
 
     if options.dry_run:
         print 'payload:', payload
