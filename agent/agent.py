@@ -44,8 +44,7 @@ def main():
     if not options.dry_run:
         sending.send_payload(payload, options.url)
     else:
-        import pprint
-        pprint.pprint(payload)
+        print 'payload:', payload
 
 if __name__ == '__main__':
     main()
