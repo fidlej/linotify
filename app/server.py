@@ -55,7 +55,7 @@ class ServerAgent(Handler):
         server = sane.valid_entity(model.Server, server_id)
         added = self.request.get('added') == '1'
         self.render('agent.html',
-                title='Run agent on %s' % server.name,
+                title='Run our agent on %s' % server.name,
                 server=server, added=added)
 
 class ServerView(Handler):
