@@ -8,7 +8,7 @@ Server '${server.name}' was successfully added.
 
 <p>
 Run <a href="/static/download/linotify-agent.tar.gz">linotify-agent.tar.gz</a> on your server to send the stats.<br/>
-Use <b>SERVER_KEY = '${server.get_secret_key()}'</b> in its libagent/config.py.
+Use <b>serverKey: ${server.get_secret_key()}</b> in its config.cfg.
 </p>
 <h2>Agent usage</h2>
 <p>
@@ -19,7 +19,7 @@ Download it:
 wget http://www.linotify.com/static/download/linotify-agent.tar.gz
 tar xzf linotify-agent.tar.gz
 cd linotify-agent
-sed -i -e 's/^SERVER_KEY.*/SERVER_KEY = "${server.get_secret_key()}"/' libagent/config.py
+sed -i -e 's/^serverKey.*/serverKey: ${server.get_secret_key()}/' config.cfg
 ./agent.py -v
 </pre>
 
