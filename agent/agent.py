@@ -10,7 +10,7 @@ import logging
 from libagent import measuring, sending, configuring
 
 VERSION = '0.2.0'
-POSTBACK_URL = 'http://localhost:9999/postback'
+POSTBACK_URL = 'http://www.linotify.com/postback'
 CONFIG_FILENAME = 'config.cfg'
 
 def _parse_args():
