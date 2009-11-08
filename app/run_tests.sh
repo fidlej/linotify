@@ -1,2 +1,2 @@
 #!/bin/sh
-PYTHONPATH=../../google_appengine exec nosetests -d "$@"
+PYTHONPATH=../../google_appengine exec nosetests "$@"

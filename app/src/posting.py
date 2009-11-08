@@ -25,7 +25,7 @@ def _fill_stage(server_id, stage_index, source_values, current_time):
     The data point could feed a higher stage.
     """
     stage = store.get_stage(server_id, store.STAGE_DURATIONS[stage_index])
-    if stage.end < current_time:
+    if stage.end <= current_time:
         avg_values = _finish_stage(stage)
         _clean_stage(stage, current_time)
         if stage_index + 1 < len(store.STAGE_DURATIONS):
@@ -65,9 +65,11 @@ def _clean_stage(stage, current_time):
     """Cleans the stage for next usage.
     """
     duration = stage.get_duration()
-    stage.end += (current_time + duration - stage.end) // duration * duration
-    logging.debug('Next %s stage ends at: %s', duration, stage.end)
+    stage.end = _get_next_end(duration, current_time)
     stage.update_samples({}, {})
+
+def _get_next_end(duration, current_time):
+    return current_time // duration * duration + duration
 
 def _check_server_secret(agentKey):
     try:

@@ -37,6 +37,7 @@ class Stage(db.Model):
     It is connected to a server by its key_name.
     The key_name has format: SERVERID_DURATION
     """
+    # The end of the stage (excluded)
     end = db.IntegerProperty(required=True)
     sums = db.BlobProperty()
     counts = db.BlobProperty()
