@@ -5,6 +5,11 @@ import logging
 from src import store
 from src.model import Point, Server
 
+class _Measure(object):
+    def __init__(self, sums, counts):
+        self.sums = sums
+        self.counts = counts
+
 def parse_payload(payload):
     from django.utils import simplejson
     return simplejson.loads(payload)
@@ -14,42 +19,54 @@ def update_stats(data):
     server_id = _check_server_secret(agentKey)
 
     current_time = int(time.time())
-    source_values = data['stats']
-    logging.debug('collected sources: %s', source_values)
+    stats = data['stats']
+    logging.debug('collected stats: %s', stats)
 
-    _fill_stage(server_id, 0, source_values, current_time)
+    _update_stages(server_id, stats, current_time)
 
-def _fill_stage(server_id, stage_index, source_values, current_time):
+def _update_stages(server_id, stats, current_time):
+    counts = dict(stats)
+    for key in counts.iterkeys():
+        counts[key] = 1
+
+    measure = _Measure(stats, counts)
+    _fill_stage(server_id, 0, measure, current_time)
+
+def _fill_stage(server_id, stage_index, measure, current_time):
     """Updates a staging area with sampled values.
     A finished staging area produces a data point.
     The data point could feed a higher stage.
     """
     stage = store.get_stage(server_id, store.STAGE_DURATIONS[stage_index])
     if stage.end <= current_time:
-        avg_values = _finish_stage(stage)
-        _clean_stage(stage, current_time)
+        higher_measure = _finish_stage(stage, current_time)
         if stage_index + 1 < len(store.STAGE_DURATIONS):
-            _fill_stage(server_id, stage_index + 1, avg_values, current_time)
+            _fill_stage(server_id, stage_index + 1, higher_measure,
+                    current_time)
 
-    _add_values(stage, source_values)
+    _add_values(stage, measure)
 
-def _add_values(stage, source_values):
+def _add_values(stage, measure):
     """Adds the measured values to the staging area.
     They will wait there till the stage.end.
     """
     sums = stage.get_sums()
     counts = stage.get_counts()
-    for key, value in source_values.iteritems():
-        sums[key] = sums.get(key, 0.0) + value
-        counts[key] = counts.get(key, 0) + 1
+    for key, increment in measure.sums.iteritems():
+        sums[key] = sums.get(key, 0.0) + increment
+        counts[key] = counts.get(key, 0) + measure.counts[key]
 
     stage.update_samples(sums, counts)
     stage.put()
 
-def _finish_stage(stage):
+def _finish_stage(stage, current_time):
     """Produces a data point from the collected samples.
-    Returns the avg values used in the point.
+    Returns the measured sums and counts used in the point.
     """
+    sums = stage.get_sums()
+    counts = stage.get_counts()
+    measure = _Measure(dict(sums), dict(counts))
+
     values = stage.get_avg_values()
     if len(values) > 0:
         server_id = stage.get_server_id()
@@ -59,7 +76,8 @@ def _finish_stage(stage):
         point = Point.prepare(server_id, duration, timestamp, values)
         point.put()
 
-    return values
+    _clean_stage(stage, current_time)
+    return measure
 
 def _clean_stage(stage, current_time):
     """Cleans the stage for next usage.
