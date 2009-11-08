@@ -73,8 +73,10 @@ def _get_next_end(duration, current_time):
     Stage end times are at duration multiples + duration//2.
     Stage middle points are then on whole multiples of the duration.
     """
+    # Rounding to the nearest point
     current_time += duration // 2
-    return current_time - (current_time % duration) + duration // 2
+    nearest_point = current_time - (current_time % duration)
+    return nearest_point + duration // 2
 
 def _check_server_secret(agentKey):
     try:
