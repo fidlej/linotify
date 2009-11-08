@@ -1,7 +1,7 @@
 
 from google.appengine.ext import db
 
-from src.model import Server, Stage, Point
+from src.model import UserProfile, Server, Stage, Point
 
 class NotFoundError(Exception):
     pass
@@ -22,6 +22,10 @@ def add_server(user_id, name):
 
     db.put(stages)
     return server
+
+def ensure_user_profile(user):
+    profile = UserProfile.get_or_insert(user.user_id(), user=user)
+    return profile
 
 def _generate_server_secret(length=20):
     """Generates a random secret string.

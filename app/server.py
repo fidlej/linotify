@@ -52,6 +52,7 @@ class ServerAdd(Handler):
         user = users.get_current_user()
         logging.info('User %s is adding server: %s', user.email(), name)
         server = store.add_server(user.user_id(), name)
+        store.ensure_user_profile(user)
         self.redirect('/my/servers/agent/%s?added=1' % server.id())
 
 class ServerAgent(Handler):
