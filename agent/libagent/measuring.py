@@ -19,9 +19,18 @@ def _measure_load():
     return {'loadAvrg': over5minutes}
 
 def _measure_num_processes():
-    output = _capture('ps', 'ax')
-    return {'processCnt': len(output.splitlines()) - 1}
+    """Counts the number of running processes
+    based on the number of /proc/PID entries.
+    """
+    import os
+    count = 0
+    filenames = os.listdir('/proc')
+    for filename in filenames:
+        # GNU ps does the same detection
+        if '0' < filename[0] <= '9':
+            count += 1
 
+    return {'processCnt': count}
 
 def _measure_mem():
     meminfo = {}
