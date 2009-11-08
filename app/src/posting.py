@@ -69,7 +69,12 @@ def _clean_stage(stage, current_time):
     stage.update_samples({}, {})
 
 def _get_next_end(duration, current_time):
-    return current_time // duration * duration + duration
+    """Returns the nearest future end time for a stage.
+    Stage end times are at duration multiples + duration//2.
+    Stage middle points are then on whole multiples of the duration.
+    """
+    current_time += duration // 2
+    return current_time - (current_time % duration) + duration // 2
 
 def _check_server_secret(agentKey):
     try:
