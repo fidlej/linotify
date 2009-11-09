@@ -25,44 +25,70 @@ class Chart(object):
         """
         return {}
 
+
+def _get_base_options(graph_index):
+    options = {}
+    color = GRAPH_COLORS[graph_index % len(GRAPH_COLORS)]
+    options['color'] = color
+    options['color_hover'] = color
+    return options
+
 class FixedChart(Chart):
     """A chart with a fixed list of keys.
     """
-    def __init__(self, name, keys, options=None, precision=2):
+    def __init__(self, name, keys, multi_options=None, precision=2):
         """Arguments:
         name - the chart title
         keys - used stats, every key will produce a new graph
-        options - a list of dicts. Each graph has its own amCharts options.
+        multi_options - a list of dicts.
+            Each graph has its own amCharts options.
         precision - a precision to use when formatting the values
         """
         self.name = name
         self.keys = keys
         self.precision = precision
-        if options is not None:
-            self.options = options
+        if multi_options is not None:
+            self.multi_options = multi_options
         else:
-            self.options = ({},) * len(keys)
+            self.multi_options = ({},) * len(keys)
 
-        for graph_options, color in zip(self.options, GRAPH_COLORS):
-            graph_options['color'] = color
-            graph_options['color_hover'] = color
+        for i, graph_options in enumerate(self.multi_options):
+            graph_options.update(_get_base_options(i))
 
     def is_interesting(self, key):
         return key in self.keys
 
     def get_options(self, graph_index, key):
-        return self.options[graph_index]
+        return self.multi_options[graph_index]
 
+class DynamicChart(Chart):
+    def __init__(self, name, key_prefix, options=None):
+        self.name = name
+        self.key_prefix = key_prefix
+        self.options = options
+
+    def is_interesting(self, key):
+        return key.startswith(self.key_prefix)
+
+    def get_options(self, graph_index, key):
+        graph_options = dict(_get_base_options(graph_index))
+        graph_options.update(self.options)
+        key_tail = key[len(self.key_prefix):]
+        for key, value in graph_options.iteritems():
+            graph_options[key] = value.replace('${key_tail}', key_tail)
+        return graph_options
 
 CHARTS = (
         FixedChart(u'Load averages', ('loadAvrg',)),
         FixedChart(u'Processes', ('processCnt',), None, precision=0),
         FixedChart(u'Physical memory',
             ('memUsed', 'memFree', 'memCached', 'memBuffers'),
-            ({'balloon_text': 'Used: {value}MB'},
-            {'balloon_text': 'Free: {value}MB'},
-            {'balloon_text': 'Cached: {value}MB'},
-            {'balloon_text': 'Buffers: {value}MB'}), precision=0),
+            ({'balloon_text': u'Used: {value}MB'},
+            {'balloon_text': u'Free: {value}MB'},
+            {'balloon_text': u'Cached: {value}MB'},
+            {'balloon_text': u'Buffers: {value}MB'}), precision=0),
+        DynamicChart(u'Disk usage', 'disk ',
+            {'balloon_text': u'${key_tail} {value}% used'})
         )
 
 def get_from_to_times():
