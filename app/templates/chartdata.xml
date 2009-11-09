@@ -6,8 +6,8 @@
 %endfor%
 </series>
 <graphs>
-%for graph, graph_options in zip(graphs, options):
-<graph line_width="2"${formatting.attributes(graph_options)|n}>
+%for i, (key, graph) in enumerate(graphs):
+<graph line_width="2"${formatting.attributes(chart.get_options(i, key))|n}>
     %for t, value in graph:
     <value xid="${t}">${formatting.point(value, chart.precision)}</value>
     %endfor%

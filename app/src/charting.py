@@ -29,6 +29,13 @@ class Chart(object):
             graph_options['color'] = color
             graph_options['color_hover'] = color
 
+    def is_interesting(self, key):
+        return key in self.keys
+
+    def get_options(self, graph_index, key):
+        return self.options[graph_index]
+
+
 CHARTS = (
         Chart(u'Load averages', ('loadAvrg',)),
         Chart(u'Processes', ('processCnt',), None, precision=0),
@@ -60,8 +67,8 @@ def generate_timestamps(time_from, time_to):
     return timestamps
 
 def get_chart_graphs(server_id, chart, timestamps):
-    """Returns a list of (timestamp, value) pairs
-    for every key defined in the chart.
+    """Returns (key, graph_points) pairs for each graph line.
+    A graph point is defined by a (timestamp, value) pair.
     """
     if len(timestamps) < 2:
         return []
@@ -72,19 +79,17 @@ def get_chart_graphs(server_id, chart, timestamps):
 
     points = store.get_points(server_id, duration, time_from, time_to)
     graphs = {}
-    for key in chart.keys:
-        graphs[key] = []
-
     for point in points:
         timestamp = point.get_timestamp()
         source_values = point.get_values()
-        for key in chart.keys:
-            value = source_values.get(key)
-            if value is not None:
-                graphs[key].append((timestamp, value))
+        for key, value in source_values.iteritems():
+            if chart.is_interesting(key):
+                graphs.setdefault(key, []).append((timestamp, value))
 
-    # The lists are returned in a fixed order.
-    return [graphs[key] for key in chart.keys]
+    # The lines are returned in a fixed order.
+    items = graphs.items()
+    items.sort()
+    return items
 
 def _round_upto_duration(timestamp, duration):
     return timestamp + timestamp % duration

@@ -89,7 +89,7 @@ class ServerChartdata(Handler):
         timestamps = charting.generate_timestamps(time_from, time_to)
         graphs = charting.get_chart_graphs(server.id(), chart, timestamps)
         self.render('chartdata.xml', timestamps=timestamps,
-                chart=chart, graphs=graphs, options=chart.options)
+                chart=chart, graphs=graphs)
 
 class Notice(Handler):
     def get(self):
