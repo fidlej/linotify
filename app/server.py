@@ -128,6 +128,9 @@ app = webapp.WSGIApplication(
         ],
         debug=config.DEBUG)
 
+from src.profiling import profiled
+
+@profiled
 def main():
     wsgiref.handlers.CGIHandler().run(app)
 
