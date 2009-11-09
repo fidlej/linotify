@@ -7,7 +7,16 @@ GRAPH_COLORS = ('#FF0000', '#0000FF', '#00FF00', '#FF9900',
         '#CC00CC', '#00CCCC', '#33FF00', '#990000', '#000066')
 
 class Chart(object):
+    """A chart definition.
+    """
+
     def __init__(self, name, keys, options=None, precision=2):
+        """Arguments:
+        name - the chart title
+        keys - used stats, every key will produce a new graph line
+        options - a list of dicts. Each graph line has its own amCharts options.
+        precision - a precision to use when formatting the values
+        """
         self.name = name
         self.keys = keys
         self.precision = precision
