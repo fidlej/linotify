@@ -1,7 +1,14 @@
 
+import logging
+
 def measure_stats():
     stats = {}
-    sources = [_measure_load, _measure_num_processes, _measure_mem]
+    sources = (
+            _measure_load,
+            _measure_num_processes,
+            _measure_mem,
+            _measure_disk_usage,
+            )
     for source in sources:
         sub_stats = source()
         stats.update(sub_stats)
@@ -47,5 +54,33 @@ def _measure_mem():
     stats['memBuffers'] = meminfo['Buffers']
     stats['memCached'] = meminfo['Cached']
     stats['memUsed'] = meminfo['MemTotal'] - meminfo['MemFree']
+    return stats
+
+INDEX_DISK = 0
+INDEX_PERCENT = 4
+INDEX_MOUNT_POINT = 5
+
+def _measure_disk_usage():
+    output = _capture('df', '-P', '-k')
+    stats = {}
+    lines = output.splitlines()[1:]
+    for line in lines:
+        parts = line.split()
+        if len(parts) < INDEX_PERCENT:
+            continue
+
+        percent = parts[INDEX_PERCENT]
+        if not percent.endswith('%'):
+            logging.info('A disk without size: %r', line)
+            continue
+
+        percent = int(percent[:-1])
+
+        if len(parts) > INDEX_MOUNT_POINT:
+            key = 'disk %s (%s)' % (parts[INDEX_DISK], parts[INDEX_MOUNT_POINT])
+        else:
+            key = 'disk %s' % parts[INDEX_DISK]
+        stats[key] = percent
+
     return stats
 
