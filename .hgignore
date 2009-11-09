@@ -1,3 +1,4 @@
 info.txt
 app/static/download/linotify-agent.tar.gz
 agent/my-config.cfg
+agent/run.sh
