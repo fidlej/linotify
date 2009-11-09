@@ -7,4 +7,4 @@ hg push
 
 cd app
 ./deploy.sh
-
+wget -S -O /dev/null http://www.linotify.com
