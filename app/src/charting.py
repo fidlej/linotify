@@ -8,13 +8,31 @@ GRAPH_COLORS = ('#FF0000', '#0000FF', '#00FF00', '#FF9900',
 
 class Chart(object):
     """A chart definition.
+    A chart could have multiple graphs.
+    A graph displays points stored under a key.
     """
+    precision = 2
+    name = ''
 
+    def is_interesting(self, key):
+        """Returns true if the chart should have
+        a graph for the given key.
+        """
+        return False
+
+    def get_options(self, graph_index, key):
+        """Returns amCharts attributes for the specified graph.
+        """
+        return {}
+
+class FixedChart(Chart):
+    """A chart with a fixed list of keys.
+    """
     def __init__(self, name, keys, options=None, precision=2):
         """Arguments:
         name - the chart title
-        keys - used stats, every key will produce a new graph line
-        options - a list of dicts. Each graph line has its own amCharts options.
+        keys - used stats, every key will produce a new graph
+        options - a list of dicts. Each graph has its own amCharts options.
         precision - a precision to use when formatting the values
         """
         self.name = name
@@ -37,9 +55,9 @@ class Chart(object):
 
 
 CHARTS = (
-        Chart(u'Load averages', ('loadAvrg',)),
-        Chart(u'Processes', ('processCnt',), None, precision=0),
-        Chart(u'Physical memory',
+        FixedChart(u'Load averages', ('loadAvrg',)),
+        FixedChart(u'Processes', ('processCnt',), None, precision=0),
+        FixedChart(u'Physical memory',
             ('memUsed', 'memFree', 'memCached', 'memBuffers'),
             ({'balloon_text': 'Used: {value}MB'},
             {'balloon_text': 'Free: {value}MB'},
