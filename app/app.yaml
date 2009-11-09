@@ -20,7 +20,7 @@ handlers:
   login: admin
   secure: optional
 
-- url: /cron/notice
+- url: /cron/.*
   script: server.py
   login: admin
   secure: optional
