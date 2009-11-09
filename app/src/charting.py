@@ -83,8 +83,10 @@ def get_chart_graphs(server_id, chart, timestamps):
         timestamp = point.get_timestamp()
         source_values = point.get_values()
         for key, value in source_values.iteritems():
-            if chart.is_interesting(key):
-                graphs.setdefault(key, []).append((timestamp, value))
+            if key in graphs:
+                graphs[key].append((timestamp, value))
+            elif chart.is_interesting(key):
+                graphs[key] = [(timestamp, value)]
 
     # The lines are returned in a fixed order.
     items = graphs.items()
