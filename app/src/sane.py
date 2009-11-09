@@ -25,8 +25,11 @@ def valid_entity(model, id):
     entity = model.get_by_id(id)
 
     user = users.get_current_user()
-    if not entity or entity.user_id != user.user_id():
+    if not entity or (
+            entity.user_id != user.user_id()
+            and not users.is_current_user_admin()):
         raise store.NotFoundError("No such %s entity: %r" % (model, id))
+
     return entity
 
 def valid_chart(chart_index):
