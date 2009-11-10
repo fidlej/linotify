@@ -11,7 +11,6 @@ import logging
 from libagent import measuring, sending, configuring
 
 VERSION = '0.2.0'
-POSTBACK_URL = 'http://www.linotify.com/postback'
 CONFIG_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)),
         'config.cfg')
 
@@ -19,13 +18,11 @@ def _parse_args():
     parser = optparse.OptionParser(__doc__)
     parser.add_option('-v', '--verbose', action='count', dest='verbosity',
             help='increase verbosity')
-    parser.add_option('-u', '--url',
-            help='the destination URL (default=%s)' % POSTBACK_URL)
     parser.add_option('-c', '--config',
             help='use different config (default=%s)' % CONFIG_FILENAME)
     parser.add_option('-n', '--dry-run', action='store_true',
             help="don't send anything")
-    parser.set_defaults(verbosity=0, url=POSTBACK_URL, config=CONFIG_FILENAME)
+    parser.set_defaults(verbosity=0, config=CONFIG_FILENAME)
 
     options, args = parser.parse_args()
     if len(args) != 0:
@@ -56,7 +53,7 @@ def main():
         return
 
     try:
-        sending.send_payload(payload, options.url)
+        sending.send_payload(payload, config['postbackUrl'])
     except Exception, e:
         logging.error('Unable to send the stats: %s', e)
 
