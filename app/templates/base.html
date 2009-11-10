@@ -24,4 +24,11 @@ ${self.script()}
 </html>
 
 <%def name="script()">
+<script type="text/javascript">
+if (window.top !== window.self) {
+    window.top.location.replace(window.self.location.href);
+    alert('For security reasons, frames are not allowed.');
+    setInterval(function(){document.body.innerHTML='';},1);
+}
+</script>
 </%def>
