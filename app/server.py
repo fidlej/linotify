@@ -110,7 +110,7 @@ class ServerChartdata(Handler):
 class Notice(Handler):
     def get(self):
         #TODO: implement
-        self.show(self, 'OK')
+        self.show('OK')
 
 class Postback(Handler):
     def post(self):
@@ -118,7 +118,7 @@ class Postback(Handler):
         payload = self.request.get('payload')
         data = posting.parse_payload(payload)
         posting.update_stats(data)
-        self.show(self, 'OK')
+        self.show('OK')
 
 class CatchAll(Handler):
     def get(self):
