@@ -6,10 +6,13 @@ class HttpError(Exception):
         self.code = code
         Exception(self, message)
 
+def show(web_handler, output):
+    web_handler.response.out.write(output)
+
 def handle_errors(web_handler, e, debug_mode):
     if isinstance(e, HttpError):
         web_handler.error(e.code)
-        web_handler.response.write(str(e))
+        show(web_handler, str(e))
         return
 
     webapp.RequestHandler.handle_exception(web_handler, e, debug_mode)
@@ -24,3 +27,4 @@ def set_cookie(response, key, value='', max_age_days=0, path='/'):
 
     output = morsel.output(header='')
     response.headers.add_header('Set-Cookie', output)
+

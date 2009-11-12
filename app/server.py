@@ -8,11 +8,8 @@ import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.api import users
 
-from waddon import handling
+from waddon.handling import show, handle_errors
 from src import store, model, sane, charting
-
-def show(web_handler, output):
-    web_handler.response.out.write(output)
 
 def render(web_handler, template, **kw):
     from waddon import templating, nocsrf
@@ -42,7 +39,7 @@ class Handler(webapp.RequestHandler):
 
             return
 
-        handling.handle_errors(self, e, debug_mode)
+        handle_errors(self, e, debug_mode)
 
 class Index(Handler):
     def get(self):
