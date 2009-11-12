@@ -9,6 +9,7 @@
 
 <form method="post" action="/my/servers/add">
 <p>
+    <input type="hidden" name="_csrf" value="${ensure_csrf_token()}"/>
     <input type="text" name="name"/>
     <input type="submit" value="Add Server"/>
 </p>

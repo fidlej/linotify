@@ -8,17 +8,23 @@ import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.api import users
 
+from waddon import handling
 from src import store, model, sane, charting
 
 def show(web_handler, output):
     web_handler.response.out.write(output)
 
 def render(web_handler, template, **kw):
-    from waddon import templating
+    from waddon import templating, nocsrf
     from src import formatting
+    def ensure_csrf_token():
+        return nocsrf.ensure_csrf_token(web_handler)
+
     args = dict(
             user=users.get_current_user(),
-            formatting=formatting)
+            formatting=formatting,
+            ensure_csrf_token=ensure_csrf_token
+            )
     args.update(kw)
     output = templating.render(template, **args)
     show(web_handler, output)
@@ -35,8 +41,8 @@ class Handler(webapp.RequestHandler):
                 show(self, str(e))
 
             return
-        webapp.RequestHandler.handle_exception(self, e, debug_mode)
 
+        handling.handle_errors(self, e, debug_mode)
 
 class Index(Handler):
     def get(self):
