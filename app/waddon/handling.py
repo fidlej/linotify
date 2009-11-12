@@ -10,6 +10,7 @@ def handle_errors(web_handler, e, debug_mode):
     if isinstance(e, HttpError):
         web_handler.error(e.code)
         web_handler.response.write(str(e))
+        return
 
     webapp.RequestHandler.handle_exception(web_handler, e, debug_mode)
 
