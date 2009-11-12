@@ -1,28 +1,38 @@
 
+from waddon import config
+config.DEBUG = True
+
 import time
 import logging
 import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.api import users
 
-from src import config, store, model, sane, charting
+from src import store, model, sane, charting
+
+def show(web_handler, output):
+    web_handler.response.out.write(output)
+
+def render(web_handler, template, **kw):
+    from waddon import templating
+    from src import formatting
+    args = dict(
+            user=users.get_current_user(),
+            formatting=formatting)
+    args.update(kw)
+    output = templating.render(template, **args)
+    show(web_handler, output)
+
 
 class Handler(webapp.RequestHandler):
-    def show(self, output):
-        self.response.out.write(output)
-
-    def render(self, template, **kw):
-        from src import templating
-        self.show(templating.render(template, **kw))
-
     def handle_exception(self, e, debug_mode):
         if isinstance(e, store.NotFoundError):
             logging.debug("NotFound: %s", e)
             self.error(404)
             if self.request.method == 'GET':
-                self.render('404.html', title='404: Not found')
+                render(self, '404.html', title='404: Not found')
             else:
-                self.show(str(e))
+                show(self, str(e))
 
             return
         webapp.RequestHandler.handle_exception(self, e, debug_mode)
@@ -30,11 +40,11 @@ class Handler(webapp.RequestHandler):
 
 class Index(Handler):
     def get(self):
-        self.render('index.html', title='Linotify')
+        render(self, 'index.html', title='Linotify')
 
 class About(Handler):
     def get(self):
-        self.render('about.html', title='About Linotify')
+        render(self, 'about.html', title='About Linotify')
 
 class Logout(Handler):
     def get(self):
@@ -44,7 +54,7 @@ class Servers(Handler):
     def get(self):
         user = users.get_current_user()
         servers = store.find_servers(user.user_id())
-        self.render('servers.html', title='Servers', servers=servers)
+        render(self, 'servers.html', title='Servers', servers=servers)
 
 class ServerAdd(Handler):
     def post(self):
@@ -59,7 +69,7 @@ class ServerAgent(Handler):
     def get(self, server_id):
         server = sane.valid_entity(model.Server, server_id)
         added = self.request.get('added') == '1'
-        self.render('agent.html',
+        render(self, 'agent.html',
                 title='Run our agent on %s' % server.name,
                 server=server, added=added)
 
@@ -74,7 +84,7 @@ class ServerView(Handler):
 
         charts = charting.CHARTS
         time_from, time_to = charting.get_from_to_times()
-        self.render('view.html', title=server.name, server=server,
+        render(self, 'view.html', title=server.name, server=server,
                 last_data_at=last_data_at, seconds_ago=seconds_ago,
                 charts=charts,
                 time_from=time_from, time_to=time_to)
@@ -88,13 +98,13 @@ class ServerChartdata(Handler):
 
         timestamps = charting.generate_timestamps(time_from, time_to)
         graphs = charting.get_chart_graphs(server.id(), chart, timestamps)
-        self.render('chartdata.xml', timestamps=timestamps,
+        render(self, 'chartdata.xml', timestamps=timestamps,
                 chart=chart, graphs=graphs)
 
 class Notice(Handler):
     def get(self):
         #TODO: implement
-        self.show('OK')
+        show(self, 'OK')
 
 class Postback(Handler):
     def post(self):
@@ -102,7 +112,7 @@ class Postback(Handler):
         payload = self.request.get('payload')
         data = posting.parse_payload(payload)
         posting.update_stats(data)
-        self.show('OK')
+        show(self, 'OK')
 
 class CatchAll(Handler):
     def get(self):
