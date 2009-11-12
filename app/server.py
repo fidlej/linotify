@@ -11,25 +11,24 @@ from google.appengine.api import users
 from waddon.handling import show, handle_errors
 from src import store, model, sane, charting
 
-def render(web_handler, template, **kw):
-    from waddon import templating, nocsrf
-    from src import formatting
-    def ensure_csrf_token():
-        return nocsrf.ensure_csrf_token(web_handler)
-
-    args = dict(
-            user=users.get_current_user(),
-            formatting=formatting,
-            ensure_csrf_token=ensure_csrf_token
-            )
-    args.update(kw)
-    output = templating.render(template, **args)
-    show(web_handler, output)
-
 
 class Handler(webapp.RequestHandler):
     show = show
-    render = render
+
+    def render(self, template, **kw):
+        from waddon import templating, nocsrf
+        from src import formatting
+        def ensure_csrf_token():
+            return nocsrf.ensure_csrf_token(self)
+
+        args = dict(
+                user=users.get_current_user(),
+                formatting=formatting,
+                ensure_csrf_token=ensure_csrf_token
+                )
+        args.update(kw)
+        output = templating.render(template, **args)
+        self.show(output)
 
     def handle_exception(self, e, debug_mode):
         if isinstance(e, store.NotFoundError):
