@@ -3,14 +3,6 @@ import time
 from src.tz import usertime
 from mako.filters import html_escape
 
-def unicode_with_replace(value):
-    if isinstance(value, unicode):
-        return value
-
-    if not isinstance(value, str):
-        value = str(value)
-    return unicode(value, encoding='utf-8', errors='replace')
-
 def date_ys(timestamp):
     """Formats date with years up to seconds.
     """
