@@ -28,14 +28,17 @@ def render(web_handler, template, **kw):
 
 
 class Handler(webapp.RequestHandler):
+    show = show
+    render = render
+
     def handle_exception(self, e, debug_mode):
         if isinstance(e, store.NotFoundError):
             logging.debug("NotFound: %s", e)
             self.error(404)
             if self.request.method == 'GET':
-                render(self, '404.html', title='404: Not found')
+                self.render('404.html', title='404: Not found')
             else:
-                show(self, str(e))
+                self.show(str(e))
 
             return
 
@@ -43,11 +46,11 @@ class Handler(webapp.RequestHandler):
 
 class Index(Handler):
     def get(self):
-        render(self, 'index.html', title='Linotify')
+        self.render('index.html', title='Linotify')
 
 class About(Handler):
     def get(self):
-        render(self, 'about.html', title='About Linotify')
+        self.render('about.html', title='About Linotify')
 
 class Logout(Handler):
     def get(self):
@@ -57,7 +60,7 @@ class Servers(Handler):
     def get(self):
         user = users.get_current_user()
         servers = store.find_servers(user.user_id())
-        render(self, 'servers.html', title='Servers', servers=servers)
+        self.render('servers.html', title='Servers', servers=servers)
 
 class ServerAdd(Handler):
     def post(self):
@@ -72,7 +75,7 @@ class ServerAgent(Handler):
     def get(self, server_id):
         server = sane.valid_entity(model.Server, server_id)
         added = self.request.get('added') == '1'
-        render(self, 'agent.html',
+        self.render('agent.html',
                 title='Run our agent on %s' % server.name,
                 server=server, added=added)
 
@@ -87,7 +90,7 @@ class ServerView(Handler):
 
         charts = charting.CHARTS
         time_from, time_to = charting.get_from_to_times()
-        render(self, 'view.html', title=server.name, server=server,
+        self.render('view.html', title=server.name, server=server,
                 last_data_at=last_data_at, seconds_ago=seconds_ago,
                 charts=charts,
                 time_from=time_from, time_to=time_to)
@@ -101,13 +104,13 @@ class ServerChartdata(Handler):
 
         timestamps = charting.generate_timestamps(time_from, time_to)
         graphs = charting.get_chart_graphs(server.id(), chart, timestamps)
-        render(self, 'chartdata.xml', timestamps=timestamps,
+        self.render('chartdata.xml', timestamps=timestamps,
                 chart=chart, graphs=graphs)
 
 class Notice(Handler):
     def get(self):
         #TODO: implement
-        show(self, 'OK')
+        self.show(self, 'OK')
 
 class Postback(Handler):
     def post(self):
@@ -115,7 +118,7 @@ class Postback(Handler):
         payload = self.request.get('payload')
         data = posting.parse_payload(payload)
         posting.update_stats(data)
-        show(self, 'OK')
+        self.show(self, 'OK')
 
 class CatchAll(Handler):
     def get(self):
