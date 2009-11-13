@@ -1,16 +1,21 @@
 
+import logging
 from google.appengine.ext import webapp
 
 class HttpError(Exception):
     def __init__(self, code, message):
         self.code = code
-        Exception(self, message)
+        Exception.__init__(self, message)
+
+    def __str__(self):
+        return '%s: %s' % (self.code, self.message)
 
 def show(web_handler, output):
     web_handler.response.out.write(output)
 
 def handle_errors(web_handler, e, debug_mode):
     if isinstance(e, HttpError):
+        logging.info('HTTP error: %s', e)
         web_handler.error(e.code)
         show(web_handler, str(e))
         return

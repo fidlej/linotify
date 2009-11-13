@@ -9,6 +9,7 @@ from google.appengine.ext import webapp
 from google.appengine.api import users
 
 from waddon.handling import show, handle_errors
+from waddon.nocsrf import prevent_csrf
 from src import store, model, sane, charting
 
 
@@ -32,7 +33,7 @@ class Handler(webapp.RequestHandler):
 
     def handle_exception(self, e, debug_mode):
         if isinstance(e, store.NotFoundError):
-            logging.debug("NotFound: %s", e)
+            logging.debug('NotFound: %s', e)
             self.error(404)
             if self.request.method == 'GET':
                 self.render('404.html', title='404: Not found')
@@ -62,6 +63,7 @@ class Servers(Handler):
         self.render('servers.html', title='Servers', servers=servers)
 
 class ServerAdd(Handler):
+    @prevent_csrf
     def post(self):
         name = sane.valid_name(self.request.get('name'))
         user = users.get_current_user()
