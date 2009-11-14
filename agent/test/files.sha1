@@ -1,0 +1,12 @@
+78034cb9fd97a8588b25b9c177aab4920f8fb04e  update.py
+6696c5799acd390273eaa8ebe1bc35eaa938cc51  simplejson/tool.py
+5c13f8471952f93312b63fed0f2660fc60a37bde  simplejson/__init__.py
+cf1add05abe2a21f9e18b1013287946be2eaa1b6  simplejson/decoder.py
+25af13729aba0899c3e7f20a478ba77f3e0f26a2  simplejson/scanner.py
+fd82f84d590ffd29ea83f4897c620b11024af01b  simplejson/encoder.py
+c10d441fba8cd669a5bd43fb43d120ae8f6d168d  libagent/configuring.py
+da39a3ee5e6b4b0d3255bfef95601890afd80709  libagent/__init__.py
+650fdb668505c32fe4bcd2ad56eee7beb2c7632f  libagent/sending.py
+c40293a6b08d8e44db58d3e052a78f5e40d48787  libagent/measuring.py
+b51136e3d22a3401483e42a063cbccfde10c1b82  agent.py
+51200e40ac19815f9bdccb533530643a571af534  config.cfg

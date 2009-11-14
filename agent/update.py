@@ -4,11 +4,15 @@ Usage: update.py
 Downloads and extracts the newest version of linotify-agent.
 """
 
+import os
 import os.path
 import logging
 
 # HTTPS URL is used to prevent a man-in-the-middle attack and data corruption
 DOWNLOAD_URL = 'https://linotify-domain.appspot.com/static/download/linotify-agent.tar.gz'
+
+# Confing files are not overwritten.
+PRESERVED_FILES = ['config.cfg']
 
 def _force_remove(path):
     """Removes the given path recursively (like rm -rf).
@@ -31,6 +35,71 @@ def _extract(tgz_stream, dest):
     tar = tarfile.open(fileobj=tgz_stream, mode='r|*')
     tar.extractall(dest)
 
+def _read_chksums(files_sha1sum_filename):
+    """Returns a pair (chksum, path) for each file mentioned
+    in the given filename.
+    """
+    chksums = []
+    for line in open(files_sha1sum_filename):
+        chksum, path = line.split()
+        chksums.append((chksum, path))
+    return chksums
+
+def _update_files(agent_dir, update_dir):
+    """Moves the files from the update_dir to agent_dir.
+    The old extra files are then removed.
+    """
+    logging.info('Updating files in %s', agent_dir)
+    osjoin = os.path.join
+    old_chksums = _read_chksums(osjoin(agent_dir, 'files.sha1sum'))
+    new_chksums = _read_chksums(osjoin(update_dir, 'files.sha1sum'))
+    for chksum, filename in new_chksums:
+        if filename in PRESERVED_FILES:
+            continue
+        install_path = osjoin(agent_dir, filename)
+        _backup_changed(install_path, chksum)
+        os.rename(osjoin(update_dir, filename), install_path)
+
+    used_filenames = [filename for ch, filename in new_chksums]
+    _remove_unused(agent_dir, old_chksums, used_filenames)
+
+def _remove_unused(agent_dir, old_chksums, used_filenames):
+    """Removes the old files that are not used any more.
+    """
+    for chksum, filename in old_chksums:
+        if filename in used_filenames:
+            continue
+
+        path = os.path.join(agent_dir, filename)
+        _backup_changed(path, chksum)
+        os.unlink(path)
+
+def _get_sha1sum(filename):
+    """Returns sha1 hexdigest for the filename.
+    It returns None when sha1 isn't provided by this Python version.
+    """
+    try:
+        from hashlib import sha1
+    except ImportError:
+        return None
+
+    m = sha1()
+    m.update(open(filename).read())
+    return m.hexdigest()
+
+def _backup_changed(path, chksum):
+    """Backups the file if its sha1sum differs from the given chksum.
+    """
+    actual_chksum = _get_sha1sum(path)
+    if actual_chksum and actual_chksum != chksum:
+        logging.warn('File %s is changed locally. Making a .bak backup.', path)
+        data = open(path).read()
+        output = open(path + '.bak', 'wb')
+        output.write(data)
+        output.flush()
+        os.fsync(output.fileno())
+        output.close()
+
 def main():
     logging.basicConfig(level=logging.INFO)
     agent_dir = os.path.dirname(os.path.realpath(__file__))
@@ -39,7 +108,8 @@ def main():
 
     tgz_stream = _stream(DOWNLOAD_URL)
     _extract(tgz_stream, update_dir)
-    #TODO: move the files
+    _update_files(agent_dir, update_dir)
+    _force_remove(update_dir)
 
 if __name__ == '__main__':
     main()
