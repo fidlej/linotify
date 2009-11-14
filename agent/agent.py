@@ -32,7 +32,8 @@ def _parse_args():
 
 def _set_logging(verbosity):
     level = max(logging.DEBUG, logging.WARNING - 10*verbosity)
-    logging.basicConfig(level=level)
+    logging.basicConfig(level=level,
+            format='%(levelname)s: %(message)s')
 
 def _prepare_payload(server_key, stats):
     return {
