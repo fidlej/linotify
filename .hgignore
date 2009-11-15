@@ -1,4 +1,7 @@
+syntax: glob
 info.txt
+notes
 app/static/download/linotify-agent.tar.gz
 agent/my-config.cfg
 agent/run.sh
+release
