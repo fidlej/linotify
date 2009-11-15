@@ -67,7 +67,7 @@ def _update_files(agent_dir, fresh_dir):
     used_filenames = [filename for ch, filename in new_chksums]
     _remove_unused(agent_dir, old_chksums, used_filenames)
 
-def _find_chksum(chksums, filename):
+def _find_chksum(filename, chksums):
     for chksum, name in chksums:
         if name == filename:
             return chksum
