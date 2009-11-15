@@ -46,14 +46,14 @@ def _read_chksums(files_sha1sum_filename):
         chksums.append((chksum, path))
     return chksums
 
-def _update_files(agent_dir, update_dir):
-    """Moves the files from the update_dir to agent_dir.
+def _update_files(agent_dir, fresh_dir):
+    """Moves the files from the fresh_dir to agent_dir.
     The old extra files are then removed.
     """
     logging.info('Updating files in %s', agent_dir)
     osjoin = os.path.join
     old_chksums = _read_chksums(osjoin(agent_dir, 'files.sha1sum'))
-    new_chksums = _read_chksums(osjoin(update_dir, 'files.sha1sum'))
+    new_chksums = _read_chksums(osjoin(fresh_dir, 'files.sha1sum'))
     for chksum, filename in new_chksums:
         if filename in PRESERVED_FILES:
             continue
@@ -62,7 +62,7 @@ def _update_files(agent_dir, update_dir):
         old_chksum = _find_chksum(filename, old_chksums)
         if old_chksum:
             _backup_changed(install_path, old_chksum)
-        os.rename(osjoin(update_dir, filename), install_path)
+        os.rename(osjoin(fresh_dir, filename), install_path)
 
     used_filenames = [filename for ch, filename in new_chksums]
     _remove_unused(agent_dir, old_chksums, used_filenames)
@@ -126,7 +126,7 @@ def main():
 
     tgz_stream = _stream(DOWNLOAD_URL)
     _extract(tgz_stream, update_dir)
-    _update_files(agent_dir, update_dir)
+    _update_files(agent_dir, os.path.join(update_dir, 'linotify-agent'))
     _force_remove(update_dir)
 
 if __name__ == '__main__':
