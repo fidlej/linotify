@@ -5,7 +5,6 @@ Downloads and extracts the newest version of linotify-agent.
 """
 
 import os
-import os.path
 import errno
 import logging
 
@@ -52,8 +51,10 @@ def _update_files(agent_dir, fresh_dir):
     """
     logging.info('Updating files in %s', agent_dir)
     osjoin = os.path.join
-    old_chksums = _read_chksums(osjoin(agent_dir, 'files.sha1sum'))
-    new_chksums = _read_chksums(osjoin(fresh_dir, 'files.sha1sum'))
+    agent_chksum_filename = osjoin(agent_dir, 'files.sha1sum')
+    fresh_chksum_filename = osjoin(fresh_dir, 'files.sha1sum')
+    old_chksums = _read_chksums(agent_chksum_filename)
+    new_chksums = _read_chksums(fresh_chksum_filename)
     for chksum, filename in new_chksums:
         if filename in PRESERVED_FILES:
             continue
@@ -66,6 +67,7 @@ def _update_files(agent_dir, fresh_dir):
 
     used_filenames = [filename for ch, filename in new_chksums]
     _remove_unused(agent_dir, old_chksums, used_filenames)
+    os.rename(fresh_chksum_filename, agent_chksum_filename)
 
 def _find_chksum(filename, chksums):
     for chksum, name in chksums:
