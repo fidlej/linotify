@@ -57,12 +57,21 @@ def _update_files(agent_dir, update_dir):
     for chksum, filename in new_chksums:
         if filename in PRESERVED_FILES:
             continue
+
         install_path = osjoin(agent_dir, filename)
-        _backup_changed(install_path, chksum)
+        old_chksum = _find_chksum(filename, old_chksums)
+        if old_chksum:
+            _backup_changed(install_path, old_chksum)
         os.rename(osjoin(update_dir, filename), install_path)
 
     used_filenames = [filename for ch, filename in new_chksums]
     _remove_unused(agent_dir, old_chksums, used_filenames)
+
+def _find_chksum(chksums, filename):
+    for chksum, name in chksums:
+        if name == filename:
+            return chksum
+    return None
 
 def _remove_unused(agent_dir, old_chksums, used_filenames):
     """Removes the old files that are not used any more.
@@ -95,7 +104,7 @@ def _backup_changed(path, chksum):
         actual_chksum = _get_sha1sum(path)
     except EnvironmentError, e:
         if e.errno == errno.ENOENT:
-            # A missing file is OK.
+            # A missing old file is OK.
             return
         else:
             raise
