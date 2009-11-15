@@ -6,6 +6,7 @@ Downloads and extracts the newest version of linotify-agent.
 
 import os
 import os.path
+import errno
 import logging
 
 # HTTPS URL is used to prevent a man-in-the-middle attack and data corruption
@@ -18,7 +19,7 @@ def _force_remove(path):
     """Removes the given path recursively (like rm -rf).
     It is OK if the path is already deleted.
     """
-    import shutil, errno
+    import shutil
     try:
         shutil.rmtree(path)
     except OSError, e:
@@ -90,7 +91,15 @@ def _get_sha1sum(filename):
 def _backup_changed(path, chksum):
     """Backups the file if its sha1sum differs from the given chksum.
     """
-    actual_chksum = _get_sha1sum(path)
+    try:
+        actual_chksum = _get_sha1sum(path)
+    except EnvironmentError, e:
+        if e.errno == errno.ENOENT:
+            # A missing file is OK.
+            return
+        else:
+            raise
+
     if actual_chksum and actual_chksum != chksum:
         logging.warn('File %s is changed locally. Making a .bak backup.', path)
         data = open(path).read()
