@@ -25,6 +25,12 @@ class Chart(object):
         """
         return {}
 
+    def tolist(self, graphs):
+        """Converts the dict of graphs
+        to a list of (key, graph) pairs with a fixed order.
+        """
+        raise NotImplementedError
+
 
 def _get_base_options(graph_index):
     options = {}
@@ -61,6 +67,12 @@ class FixedChart(Chart):
     def get_options(self, graph_index, key):
         return self.multi_options[graph_index]
 
+    def tolist(self, graphs):
+        """Uses the order of the specified keys.
+        """
+        return [(key, graphs[key]) for key in self.keys]
+
+
 class DynamicChart(Chart):
     def __init__(self, name, key_prefix, options=None):
         self.name = name
@@ -77,6 +89,13 @@ class DynamicChart(Chart):
         for key, value in graph_options.iteritems():
             graph_options[key] = value.replace('${key_tail}', key_tail)
         return graph_options
+
+    def tolist(self, graphs):
+        """Sorts the graphs by their key.
+        """
+        items = graphs.items()
+        items.sort()
+        return items
 
 CHARTS = (
         FixedChart(u'Load averages', ('loadAvrg',)),
@@ -132,10 +151,7 @@ def get_chart_graphs(server_id, chart, timestamps):
             elif chart.is_interesting(key):
                 graphs[key] = [(timestamp, value)]
 
-    # The lines are returned in a fixed order.
-    items = graphs.items()
-    items.sort()
-    return items
+    return chart.tolist(graphs)
 
 def _round_upto_duration(timestamp, duration):
     return timestamp + timestamp % duration
