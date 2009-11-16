@@ -11,13 +11,17 @@ def valid_name(value):
     # App Engine datastore limits strings to 500 bytes
     return value[:251]
 
-def valid_int(value):
-    """Return the integer value or zero.
+def valid_int(value, min_value=None):
+    """Converts the value to an integer value.
     """
     try:
-        return int(value)
+        result = int(value)
     except ValueError:
-        return 0
+        result = 0
+
+    if min_value is not None:
+        result = max(min_value, result)
+    return result
 
 def valid_entity(model, id):
     from src import store

@@ -110,10 +110,14 @@ CHARTS = (
             {'balloon_text': u'${key_tail} {value}% used'})
         )
 
-def get_from_to_times():
+def get_time_range(days):
+    """Returns start and stop timestamps
+    to cover the given number of days.
+    """
     now = int(time.time())
-    time_from = tz.day_start(now)
-    time_to = time_from + tz.DAY_SECONDS
+    today_end = tz.day_start(now) + tz.DAY_SECONDS
+    time_from = today_end - days * tz.DAY_SECONDS
+    time_to = today_end
     return time_from, time_to
 
 def generate_timestamps(time_from, time_to):

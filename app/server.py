@@ -82,6 +82,7 @@ class ServerAgent(Handler):
 
 class ServerView(Handler):
     def get(self, server_id):
+        days = sane.valid_int(self.request.get('days'), min_value=1)
         server = sane.valid_entity(model.Server, server_id)
         last_data_at = store.get_last_data_at(server_id)
         if last_data_at is not None:
@@ -90,7 +91,7 @@ class ServerView(Handler):
             seconds_ago = None
 
         charts = charting.CHARTS
-        time_from, time_to = charting.get_from_to_times()
+        time_from, time_to = charting.get_time_range(days)
         self.render('view.html', title=server.name, server=server,
                 last_data_at=last_data_at, seconds_ago=seconds_ago,
                 charts=charts,
