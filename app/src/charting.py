@@ -70,7 +70,7 @@ class FixedChart(Chart):
     def tolist(self, graphs):
         """Uses the order of the specified keys.
         """
-        return [(key, graphs[key]) for key in self.keys]
+        return [(key, graphs.get(key, ())) for key in self.keys]
 
 
 class DynamicChart(Chart):
