@@ -54,6 +54,8 @@ def _measure_mem():
     stats['memBuffers'] = meminfo['Buffers']
     stats['memCached'] = meminfo['Cached']
     stats['memUsed'] = meminfo['MemTotal'] - meminfo['MemFree']
+    stats['swapFree'] = meminfo['SwapFree']
+    stats['swapUsed'] = meminfo['SwapTotal'] - meminfo['SwapFree']
     return stats
 
 INDEX_DISK = 0
