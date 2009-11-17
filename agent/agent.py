@@ -10,7 +10,7 @@ import logging
 
 from libagent import measuring, sending, configuring
 
-VERSION = '0.2.0'
+VERSION = '0.3.0'
 CONFIG_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)),
         'config.cfg')
 
