@@ -94,7 +94,7 @@ class ServerView(Handler):
         time_from, time_to = charting.get_time_range(days)
         self.render('view.html', title=server.name, server=server,
                 last_data_at=last_data_at, seconds_ago=seconds_ago,
-                charts=charts,
+                charts=charts, days=days,
                 time_from=time_from, time_to=time_to)
 
 class ServerChartdata(Handler):

@@ -1,17 +1,23 @@
 <%inherit file="base.html"/>
 
-<p>
 %if last_data_at is not None:
+<p>
 Last data received: ${formatting.date_ys(last_data_at)}
 (${formatting.ago(seconds_ago)}).
     %if seconds_ago >= 600:
 <br/>${self.agent_help()}
     %endif%
+<br/>
+<a ${formatting.select(1, days)|n} href="/my/servers/view/${server.id()}">today</a>
+<a ${formatting.select(7, days)|n} href="/my/servers/view/${server.id()}?days=7">last 7 days</a>
+<a ${formatting.select(30, days)|n} href="/my/servers/view/${server.id()}?days=30">last 30 days</a>
+</p>
 %else:
+<p>
 No data received yet.
 ${self.agent_help()}
-%endif%
 </p>
+%endif%
 
 %for i, chart in enumerate(charts):
 <h2>${chart.name}</h2>

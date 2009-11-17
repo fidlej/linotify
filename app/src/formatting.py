@@ -25,8 +25,15 @@ def ago(seconds_ago):
         return '%s minutes ago' % minutes
 
 def attributes(map):
-    output = ''
+    output = u''
     for key, value in map.iteritems():
-        output += ' %s="%s"' % (html_escape(key), html_escape(value))
+        output += u' %s="%s"' % (html_escape(key), html_escape(value))
     return output
+
+def select(option, actual_value):
+    """Outputs class="selected" when the given option is selected.
+    """
+    if option == actual_value:
+        return u'class="selected"'
+    return u''
 

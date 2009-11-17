@@ -75,4 +75,7 @@ div.menu a:hover {
     border-bottom: 4px solid #3366CC;
 }
 
-
+/* Selected items */
+a.selected {
+    font-weight: bold;
+}
