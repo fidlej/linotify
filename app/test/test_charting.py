@@ -4,10 +4,10 @@ from src import charting
 
 def test_fixed_chart():
     chart = charting.FixedChart(u'A chart',
-            ('key1', 'key2'),
             (
-                {'option1':'o1', 'option2':'o2'},
-                {'option1':'key2_o1', 'option2':'key2_o2'}))
+                ('key1', {'option1':'o1', 'option2':'o2'}),
+                ('key2', {'option1':'key2_o1', 'option2':'key2_o2'})
+            ))
 
     assert_equal(chart.is_interesting('key1'), True)
     assert_equal(chart.is_interesting('key_x'), False)

@@ -42,21 +42,17 @@ def _get_base_options(graph_index):
 class FixedChart(Chart):
     """A chart with a fixed list of keys.
     """
-    def __init__(self, name, keys, multi_options=None, precision=2):
+    def __init__(self, name, key_options, precision=2):
         """Arguments:
         name - the chart title
-        keys - used stats, every key will produce a new graph
-        multi_options - a list of dicts.
-            Each graph has its own amCharts options.
+        key_options - a list of (key, options) pairs.
+            The order of the keys is used to order the graphs.
         precision - a precision to use when formatting the values
         """
         self.name = name
-        self.keys = keys
+        self.keys = [key for key, options in key_options]
+        self.multi_options = [options for key, options in key_options]
         self.precision = precision
-        if multi_options is not None:
-            self.multi_options = multi_options
-        else:
-            self.multi_options = ({},) * len(keys)
 
         for i, graph_options in enumerate(self.multi_options):
             graph_options.update(_get_base_options(i))
@@ -98,18 +94,19 @@ class DynamicChart(Chart):
         return items
 
 CHARTS = (
-        FixedChart(u'Load averages', ('loadAvrg',),
-            ({'balloon_text': u'{value} processes awake'},)),
-        FixedChart(u'Processes', ('processCnt',), 
-            ({'balloon_text': u'{value} processes'},), precision=0),
+        FixedChart(u'Load averages',
+            [('loadAvrg', {'balloon_text': u'{value} processes awake'})]),
+        FixedChart(u'Processes',
+            [('processCnt', {'balloon_text': u'{value} processes'})],
+            precision=0),
         FixedChart(u'Physical memory',
-            ('memUsed', 'memFree', 'memCached', 'memBuffers', 'swapUsed'),
-            ({'balloon_text': u'Used: {value}MB'},
-            {'balloon_text': u'Free: {value}MB'},
-            {'balloon_text': u'Cached: {value}MB'},
-            {'balloon_text': u'Buffers: {value}MB'},
-            {'balloon_text': u'Used swap: {value}MB'},
-            ), precision=0),
+            [
+                ('memUsed', {'balloon_text': u'Used: {value}MB'}),
+                ('memFree', {'balloon_text': u'Cached: {value}MB'}),
+                ('memCached', {'balloon_text': u'Free: {value}MB'}),
+                ('memBuffers', {'balloon_text': u'Buffers: {value}MB'}),
+                ('swapUsed', {'balloon_text': u'Used swap: {value}MB'}),
+            ], precision=0),
         DynamicChart(u'Disk usage', 'disk ',
             {'balloon_text': u'${key_tail} {value}% used'})
         )
@@ -127,7 +124,7 @@ def get_time_range(days):
 def generate_timestamps(time_from, time_to):
     duration = _get_usable_duration(time_to - time_from)
     if duration is None:
-        duration = stage.STAGE_DURATIONS[-1]
+        duration = store.STAGE_DURATIONS[-1]
         time_from = time_to - duration * store.LIMIT
 
     timestamps = []
