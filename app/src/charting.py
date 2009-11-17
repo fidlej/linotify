@@ -103,11 +103,13 @@ CHARTS = (
         FixedChart(u'Processes', ('processCnt',), 
             ({'balloon_text': u'{value} processes'},), precision=0),
         FixedChart(u'Physical memory',
-            ('memUsed', 'memFree', 'memCached', 'memBuffers'),
+            ('memUsed', 'memFree', 'memCached', 'memBuffers', 'swapUsed'),
             ({'balloon_text': u'Used: {value}MB'},
             {'balloon_text': u'Free: {value}MB'},
             {'balloon_text': u'Cached: {value}MB'},
-            {'balloon_text': u'Buffers: {value}MB'}), precision=0),
+            {'balloon_text': u'Buffers: {value}MB'},
+            {'balloon_text': u'Used swap: {value}MB'},
+            ), precision=0),
         DynamicChart(u'Disk usage', 'disk ',
             {'balloon_text': u'${key_tail} {value}% used'})
         )
