@@ -98,8 +98,10 @@ class DynamicChart(Chart):
         return items
 
 CHARTS = (
-        FixedChart(u'Load averages', ('loadAvrg',)),
-        FixedChart(u'Processes', ('processCnt',), None, precision=0),
+        FixedChart(u'Load averages', ('loadAvrg',),
+            ({'balloon_text': u'{value} processes awake'},)),
+        FixedChart(u'Processes', ('processCnt',), 
+            ({'balloon_text': u'{value} processes'},), precision=0),
         FixedChart(u'Physical memory',
             ('memUsed', 'memFree', 'memCached', 'memBuffers'),
             ({'balloon_text': u'Used: {value}MB'},
