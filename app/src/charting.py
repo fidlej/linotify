@@ -3,6 +3,11 @@ import time
 
 from src import tz, store
 
+# The maximum number of time points on a chart.
+# It should be less than the number of pixels on a chart.
+POINTS_LIMIT = 400
+assert POINTS_LIMIT <= store.LIMIT
+
 def get_time_range(days):
     """Returns start and stop timestamps
     to cover the given number of days.
@@ -17,7 +22,7 @@ def generate_timestamps(time_from, time_to):
     duration = _get_usable_duration(time_to - time_from)
     if duration is None:
         duration = store.STAGE_DURATIONS[-1]
-        time_from = time_to - duration * store.LIMIT
+        time_from = time_to - duration * POINTS_LIMIT
 
     timestamps = []
     t = _round_upto_duration(time_from, duration)
@@ -56,7 +61,7 @@ def _round_upto_duration(timestamp, duration):
 def _get_usable_duration(interval):
     for duration in store.STAGE_DURATIONS:
         num_points = interval // duration
-        if num_points <= store.LIMIT:
+        if num_points <= POINTS_LIMIT:
             return duration
 
     return None
