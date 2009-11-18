@@ -4,6 +4,7 @@ from ConfigParser import RawConfigParser
 
 DEFAULT_CONFIG = {
         'postbackUrl': 'http://www.linotify.com/postback',
+        'ignoreSiteErrors': 'True',
         }
 
 def read_config(filename):

@@ -54,7 +54,8 @@ def main():
         return
 
     try:
-        sending.send_payload(payload, config['postbackUrl'])
+        sending.send_payload(payload, config['postbackUrl'],
+                config['ignoreSiteErrors'] == 'True')
     except Exception, e:
         logging.error('Unable to send the stats: %s', e)
 
