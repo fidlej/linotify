@@ -33,16 +33,19 @@ def _handle_exception(e, ignore_site_errors):
     Only HTTP code 404 isn't ignored. It could report the invalid serverKey.
     """
     if isinstance(e, urllib2.HTTPError):
+        if hasattr(e, 'read'):
+            result = e.read()
+            msg = '%s: %s' % (e, result)
+        else:
+            msg = str(e)
+
         if e.code == 404:
-            if hasattr(e, 'read'):
-                result = e.read()
-                msg = '%s: %s' % (e, result)
-            else:
-                msg = str(e)
             raise Exception(msg)
+    else:
+        msg = str(e)
 
     if ignore_site_errors:
-        logging.info('Sending error: %s', e)
+        logging.info('Sending error: %s', msg)
     else:
         raise e
 
