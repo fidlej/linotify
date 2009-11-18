@@ -3,7 +3,7 @@ Chart definitions.
 """
 
 GRAPH_COLORS = ('#FF0000', '#0000FF', '#00FF00', '#FF9900',
-        '#CC00CC', '#00CCCC', '#33FF00', '#990000', '#000066')
+        '#CC00CC', '#00CCCC', '#99CC00', '#990000', '#000066')
 
 class Chart(object):
     """A chart definition.
