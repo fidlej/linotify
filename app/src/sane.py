@@ -37,10 +37,10 @@ def valid_entity(model, id):
     return entity
 
 def valid_chart(chart_index):
-    from src import charting, store
+    from src import chartdef, store
     chart_index = valid_int(chart_index)
-    if chart_index < 0 or chart_index >= len(charting.CHARTS):
+    if chart_index < 0 or chart_index >= len(chartdef.CHARTS):
         raise store.NotFoundError("Wrong chart index: %r" % chart_index)
 
-    return charting.CHARTS[chart_index]
+    return chartdef.CHARTS[chart_index]
 

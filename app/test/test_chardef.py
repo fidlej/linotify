@@ -1,9 +1,9 @@
 
 from nose.tools import assert_equal, assert_not_equal
-from src import charting
+from src import chartdef
 
 def test_fixed_chart():
-    chart = charting.FixedChart(u'A chart',
+    chart = chartdef.FixedChart(u'A chart',
             (
                 ('key1', {'option1':'o1', 'option2':'o2'}),
                 ('key2', {'option1':'key2_o1', 'option2':'key2_o2'})

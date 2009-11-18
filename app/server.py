@@ -10,7 +10,7 @@ from google.appengine.api import users
 
 from waddon.handling import show, handle_errors
 from waddon.nocsrf import prevent_csrf
-from src import store, model, sane, charting
+from src import store, model, sane
 
 
 class Handler(webapp.RequestHandler):
@@ -82,6 +82,7 @@ class ServerAgent(Handler):
 
 class ServerView(Handler):
     def get(self, server_id):
+        from src import charting, chartdef
         days = sane.valid_int(self.request.get('days'), min_value=1)
         server = sane.valid_entity(model.Server, server_id)
         last_data_at = store.get_last_data_at(server_id)
@@ -90,7 +91,7 @@ class ServerView(Handler):
         else:
             seconds_ago = None
 
-        charts = charting.CHARTS
+        charts = chartdef.CHARTS
         time_from, time_to = charting.get_time_range(days)
         self.render('view.html', title=server.name, server=server,
                 last_data_at=last_data_at, seconds_ago=seconds_ago,
@@ -99,6 +100,7 @@ class ServerView(Handler):
 
 class ServerChartdata(Handler):
     def get(self, server_id):
+        from src import charting
         server = sane.valid_entity(model.Server, server_id)
         time_from = sane.valid_int(self.request.get('time_from'))
         time_to = sane.valid_int(self.request.get('time_to'))
