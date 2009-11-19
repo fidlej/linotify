@@ -12,6 +12,10 @@ HEADERS = {
         }
 
 def send_payload(payload, url, ignore_site_errors=True):
+    """Sends the data to the given URL.
+    It returns the state of the agent. A False return value suggests
+    to do a agent update.
+    """
     logging.info('Sending: %r', payload)
     data = {'payload': json.dumps(payload)}
     data = urllib.urlencode(data)
@@ -20,15 +24,22 @@ def send_payload(payload, url, ignore_site_errors=True):
     try:
         response = urllib2.urlopen(request)
         result = response.read()
-        if result == 'OK':
-            logging.debug('Success')
-        elif result.startswith('newer agent available'):
-            logging.warning(result)
-        else:
-            raise Exception('Unexpected postback response: %r' % result)
-
     except urllib2.URLError, e:
         _handle_exception(e, ignore_site_errors)
+        return False
+
+    if result == 'OK':
+        logging.debug('Success')
+        agentok = True
+    elif result.startswith('newer agent available'):
+        logging.warning('Detected newer version: %s', result)
+        agentok = False
+    else:
+        logging.warning('Unexpected postback response: %r', result)
+        agentok = False
+
+    return agentok
+
 
 def _handle_exception(e, ignore_site_errors):
     """Ignores the website errors.

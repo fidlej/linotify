@@ -120,8 +120,9 @@ def _backup_changed(path, chksum):
         os.fsync(output.fileno())
         output.close()
 
-def main():
-    logging.basicConfig(level=logging.INFO)
+def update_agent():
+    """Updates the local agent installation.
+    """
     agent_dir = os.path.dirname(os.path.realpath(__file__))
     update_dir = os.path.join(agent_dir, '.update')
     _force_remove(update_dir)
@@ -130,6 +131,10 @@ def main():
     _extract(tgz_stream, update_dir)
     _update_files(agent_dir, os.path.join(update_dir, 'linotify-agent'))
     _force_remove(update_dir)
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    update_agent()
 
 if __name__ == '__main__':
     main()

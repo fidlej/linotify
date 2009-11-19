@@ -7,6 +7,7 @@ Sends server statistics to a HTTP URL.
 import os.path
 import optparse
 import logging
+import sys
 
 from libagent import measuring, sending, configuring
 
@@ -54,10 +55,16 @@ def main():
         return
 
     try:
-        sending.send_payload(payload, config['postbackUrl'],
+        agentok = sending.send_payload(payload, config['postbackUrl'],
                 config['ignoreSiteErrors'] == 'True')
     except Exception, e:
         logging.error('Unable to send the stats: %s', e)
+        sys.exit(1)
+
+    if not agentok and config['autoUpdate'] == 'True':
+        import update
+        update.update_agent()
+
 
 if __name__ == '__main__':
     main()
