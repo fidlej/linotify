@@ -5,6 +5,8 @@ import logging
 from src import store
 from src.model import Point, Server
 
+LATEST_AGENT_VERSION = 'c73a6ab65e0f'
+
 class _Measure(object):
     def __init__(self, sums, counts):
         self.sums = sums
@@ -13,6 +15,12 @@ class _Measure(object):
 def parse_payload(payload):
     from django.utils import simplejson
     return simplejson.loads(payload)
+
+def comment_agent_version(data):
+    version = data.get('version')
+    if version != LATEST_AGENT_VERSION:
+        return 'newer agent available: %s' % LATEST_AGENT_VERSION
+    return 'OK'
 
 def update_stats(data):
     agentKey = data['serverKey']

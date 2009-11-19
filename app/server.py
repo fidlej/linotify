@@ -122,7 +122,7 @@ class Postback(Handler):
         payload = self.request.get('payload')
         data = posting.parse_payload(payload)
         posting.update_stats(data)
-        self.show('OK')
+        self.show(posting.comment_agent_version(data))
 
 class DbUpdate(Handler):
     def get(self):
