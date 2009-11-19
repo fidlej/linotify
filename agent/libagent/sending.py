@@ -20,10 +20,12 @@ def send_payload(payload, url, ignore_site_errors=True):
     try:
         response = urllib2.urlopen(request)
         result = response.read()
-        if result != 'OK':
-            raise Exception('Unexpected postback response: %r' % result)
-        else:
+        if result == 'OK':
             logging.debug('Success')
+        elif result.startswith('newer agent available'):
+            logging.warning(result)
+        else:
+            raise Exception('Unexpected postback response: %r' % result)
 
     except urllib2.URLError, e:
         _handle_exception(e, ignore_site_errors)

@@ -10,7 +10,7 @@ import logging
 
 from libagent import measuring, sending, configuring
 
-VERSION = '${HGVERSION}'
+VERSION = '${AGENT_VERSION}'
 CONFIG_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)),
         'config.cfg')
 
