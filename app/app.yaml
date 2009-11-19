@@ -20,6 +20,10 @@ handlers:
   login: admin
   secure: optional
 
+- url: /db_update
+  script: server.py
+  login: admin
+  secure: optional
 - url: /cron/.*
   script: server.py
   login: admin
@@ -31,3 +35,4 @@ handlers:
 - url: .*
   script: server.py
   secure: optional
+

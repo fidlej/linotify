@@ -124,6 +124,23 @@ class Postback(Handler):
         posting.update_stats(data)
         self.show('OK')
 
+class DbUpdate(Handler):
+    def get(self):
+        from src.model import Server, Stage
+        counter = 0
+        duration = 4 * 3600
+        for server in Server.all():
+            try:
+                store.get_stage(server.id(), duration)
+            except store.NotFoundError:
+                logging.info('Adding stage to server %s: %s',
+                        server.id(), server.name)
+                Stage.prepare(server.id(), duration).put()
+                counter += 1
+
+        self.show('Added %s stages' % counter)
+
+
 class CatchAll(Handler):
     def get(self):
         logging.info('Wrong path: %s', self.request.path)
@@ -144,6 +161,7 @@ app = webapp.WSGIApplication(
             ('/my/servers/chartdata/(.*)', ServerChartdata),
             ('/cron/notice', Notice),
             ('/postback', Postback),
+            ('/db_update', DbUpdate),
             ('/.*', CatchAll),
         ],
         debug=config.DEBUG)

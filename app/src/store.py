@@ -7,7 +7,7 @@ class NotFoundError(Exception):
     pass
 
 LIMIT = 1000
-STAGE_DURATIONS = [300, 3600, 86400]
+STAGE_DURATIONS = [300, 3600, 4*3600, 86400]
 
 def add_server(user_id, name):
     secret = _generate_server_secret()
