@@ -5,7 +5,7 @@ import logging
 from src import store
 from src.model import Point, Server
 
-LATEST_AGENT_VERSION = 'c73a6ab65e0f'
+LATEST_AGENT_VERSION = '45cffc7f1ea1'
 
 class _Measure(object):
     def __init__(self, sums, counts):
