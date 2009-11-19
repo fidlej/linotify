@@ -11,7 +11,8 @@ mkdir -p release/linotify
 hg archive release/linotify
 mv release/linotify/agent release/linotify-agent
 rm -rf 'release/linotify-agent/test'
-sed -i -e 's/${HGVERSION}/'"$hgversion/" release/linotify-agent/agent.py
+sed -i -e 's/${AGENT_VERSION}/'"$hgversion/" release/linotify-agent/agent.py
+sed -i -e 's/^LATEST_AGENT_VERSION = .*/'"LATEST_AGENT_VERSION = '$hgversion'/" app/src/posting.py
 
 # Package it
 find release/linotify-agent/ -type f -exec sha1sum {} \; | sed 's@  release/linotify-agent/@  @' >release/files.sha1sum
