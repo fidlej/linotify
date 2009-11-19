@@ -126,20 +126,7 @@ class Postback(Handler):
 
 class DbUpdate(Handler):
     def get(self):
-        from src.model import Server, Stage
-        counter = 0
-        duration = 4 * 3600
-        for server in Server.all():
-            try:
-                store.get_stage(server.id(), duration)
-            except store.NotFoundError:
-                logging.info('Adding stage to server %s: %s',
-                        server.id(), server.name)
-                Stage.prepare(server.id(), duration).put()
-                counter += 1
-
-        self.show('Added %s stages' % counter)
-
+        self.show('Nothing to do.')
 
 class CatchAll(Handler):
     def get(self):
