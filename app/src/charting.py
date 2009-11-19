@@ -19,6 +19,8 @@ def get_time_range(days):
     return time_from, time_to
 
 def generate_timestamps(time_from, time_to):
+    """Generates time points for the given time range.
+    """
     duration = _get_usable_duration(time_to - time_from)
     if duration is None:
         duration = store.STAGE_DURATIONS[-1]

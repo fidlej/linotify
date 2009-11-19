@@ -62,10 +62,13 @@ def get_last_data_at(server_id):
     return stage.last_data_at
 
 def get_points(server_id, duration, time_from, time_to, limit=LIMIT):
+    """Returns data points for the given time range.
+    Both ends of the time range are included if possible.
+    """
     key_from = Point.build_key_name(server_id, duration, time_from)
     key_to = Point.build_key_name(server_id, duration, time_to)
 
-    query = Point.gql("where __key__ > :key_from "
+    query = Point.gql("where __key__ >= :key_from "
             "and __key__ <= :key_to "
             "order by __key__ ",
             key_from=db.Key.from_path('Point', key_from),
