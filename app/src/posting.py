@@ -28,8 +28,6 @@ def update_stats(data):
 
     current_time = int(time.time())
     stats = data['stats']
-    logging.debug('collected stats: %s', stats)
-
     _update_stages(server_id, stats, current_time)
 
 def _update_stages(server_id, stats, current_time):
@@ -80,7 +78,8 @@ def _finish_stage(stage, current_time):
         server_id = stage.get_server_id()
         timestamp = stage.end - stage.get_duration() // 2
         duration = stage.get_duration()
-        logging.debug('Creating point at %s: %s', timestamp, values)
+        logging.debug('Creating a point for %s at %s: %s',
+                server_id, timestamp, values)
         point = Point.prepare(server_id, duration, timestamp, values)
         point.put()
 
