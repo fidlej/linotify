@@ -14,3 +14,24 @@
     <input type="submit" value="Add Server"/>
 </p>
 </form>
+
+<%def name="script()">
+${parent.script()}
+## Setting cookie tz=offset_seconds.
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+var setCookie = function(name, value, days) {
+    var date = new Date();
+    date.setTime(date.getTime() + days*24*3600*1000);
+    var expires = "; expires=" + date.toUTCString();
+    document.cookie = [name, "=", window.encodeURIComponent(value), expires, "; path=/"].join('');
+};
+
+setCookie('tz', new Date().getTimezoneOffset() * 60);
+})();
+// ]]>
+</script>
+</%def>
+
+

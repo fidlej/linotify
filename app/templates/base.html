@@ -24,6 +24,7 @@ ${self.script()}
 </html>
 
 <%def name="script()">
+## Preventing clickjacking.
 <script type="text/javascript">
 if (window.top !== window.self) {
     window.top.location.replace(window.self.location.href);

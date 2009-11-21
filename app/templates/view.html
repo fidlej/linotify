@@ -27,6 +27,7 @@ ${self.agent_help()}
 
 <%def name="script()">
 ${parent.script()}
+## Loading the amCharts.
 <script type="text/javascript" src="/static/js/swfobject.js"></script>
 %for i, chart in enumerate(charts):
 <script type="text/javascript">
