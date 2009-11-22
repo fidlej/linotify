@@ -101,8 +101,8 @@ CHARTS = (
         FixedChart(u'Physical memory',
             [
                 ('memUsed', {'balloon_text': u'Used: {value}MB'}),
-                ('memFree', {'balloon_text': u'Cached: {value}MB'}),
-                ('memCached', {'balloon_text': u'Free: {value}MB'}),
+                ('memFree', {'balloon_text': u'Free: {value}MB'}),
+                ('memCached', {'balloon_text': u'Cached: {value}MB'}),
                 ('memBuffers', {'balloon_text': u'Buffers: {value}MB'}),
                 ('swapUsed', {'balloon_text': u'Used swap: {value}MB'}),
             ], precision=0),
