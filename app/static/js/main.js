@@ -39,7 +39,7 @@ var prepareTzSelect = function(selectId) {
     }
 }
 
-// Don't overwrite the tz value if user wants it to be preserved.
+// The tz value is not overwritten if the user wants it to be preserved.
 var tz = getCookie('tz');
 if (!/p$/.test(tz)) {
     tz = new Date().getTimezoneOffset();
