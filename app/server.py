@@ -93,7 +93,8 @@ class ServerView(Handler):
             seconds_ago = None
 
         charts = chartdef.CHARTS
-        time_from, time_to = charting.get_time_range(days)
+        time_from, time_to = charting.get_time_range(days,
+                sane.RequestContext(self.request))
         self.render('view.html', title=server.name, server=server,
                 last_data_at=last_data_at, seconds_ago=seconds_ago,
                 charts=charts, days=days,

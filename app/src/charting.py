@@ -8,12 +8,12 @@ from src import tz, store
 POINTS_LIMIT = 400
 assert POINTS_LIMIT <= store.LIMIT
 
-def get_time_range(days):
+def get_time_range(days, req):
     """Returns start and stop timestamps
     to cover the given number of days.
     """
     now = int(time.time())
-    today_end = tz.day_start(now) + tz.DAY_SECONDS
+    today_end = tz.day_start(now, req) + tz.DAY_SECONDS
     time_from = today_end - days * tz.DAY_SECONDS
     time_to = today_end
     return time_from, time_to
