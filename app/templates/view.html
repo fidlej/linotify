@@ -5,7 +5,7 @@
 Last data received: ${formatting.date_ys(last_data_at)}
 <select id="tz_select" name="tz">
 %for i in xrange(-12,15):
-    <option value="${-i*3600}"${formatting.select_option(tz, -i*3600)|n}>UTC${formatting.offset(i)}</option>
+    <option value="${-i*3600}"${formatting.select_option(req.get_tzoffset_seconds(), -i*3600)|n}>UTC${formatting.offset(i)}</option>
 %endfor%
 </select>
 (${formatting.ago(seconds_ago)}).

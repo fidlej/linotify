@@ -44,3 +44,17 @@ def valid_chart(chart_index):
 
     return chartdef.CHARTS[chart_index]
 
+
+class RequestContext(object):
+    def __init__(self, request):
+        self.request = request
+
+    def get_tzoffset_seconds(self):
+        """Returns the timezone offset for the current user for today.
+        """
+        offset = self.request.cookies.get('tz', u'0')
+        if offset.endswith('p'):
+            offset = offset[:-1]
+
+        return valid_int(offset)
+

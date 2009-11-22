@@ -11,9 +11,3 @@ def usertime(timestamp):
     #TODO: support user defined timezones
     return time.gmtime(timestamp)
 
-def get_offset(timestamp):
-    """Returns the number of seconds the user's timezone offset
-    is shifted from UTC at the given date.
-    """
-    #TODO: read the tz cookie
-    return 0

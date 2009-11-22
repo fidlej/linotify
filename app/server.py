@@ -23,6 +23,7 @@ class Handler(webapp.RequestHandler):
             return nocsrf.ensure_csrf_token(self)
 
         args = dict(
+                req=sane.RequestContext(self.request),
                 user=users.get_current_user(),
                 formatting=formatting,
                 ensure_csrf_token=ensure_csrf_token
@@ -82,7 +83,7 @@ class ServerAgent(Handler):
 
 class ServerView(Handler):
     def get(self, server_id):
-        from src import charting, chartdef, tz
+        from src import charting, chartdef
         days = sane.valid_int(self.request.get('days'), min_value=1)
         server = sane.valid_entity(model.Server, server_id)
         last_data_at = store.get_last_data_at(server_id)
@@ -95,7 +96,7 @@ class ServerView(Handler):
         time_from, time_to = charting.get_time_range(days)
         self.render('view.html', title=server.name, server=server,
                 last_data_at=last_data_at, seconds_ago=seconds_ago,
-                charts=charts, days=days, tz=tz.get_offset(last_data_at),
+                charts=charts, days=days,
                 time_from=time_from, time_to=time_to)
 
 class ServerChartdata(Handler):
