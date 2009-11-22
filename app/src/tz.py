@@ -10,3 +10,9 @@ def day_start(timestamp):
 def usertime(timestamp):
     #TODO: support user defined timezones
     return time.gmtime(timestamp)
+
+def get_offset(timestamp):
+    """Returns the number of seconds for user's timezone offset.
+    """
+    #TODO: read the tz cookie
+    return 0

@@ -37,3 +37,20 @@ def select(option, actual_value):
         return u'class="selected"'
     return u''
 
+def select_option(option, actual_value):
+    """Outputs selected="true" when the given option is selected.
+    """
+    if option == actual_value:
+        return u'selected="true"'
+    return u''
+
+def offset(number):
+    """Returns -number, +number or an empty string for zero.
+    """
+    if number == 0:
+        return u''
+    if number > 0:
+        return u'+%s' % number
+    return unicode(number)
+
+
