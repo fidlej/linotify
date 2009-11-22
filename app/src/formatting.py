@@ -38,10 +38,10 @@ def select(option, actual_value):
     return u''
 
 def select_option(option, actual_value):
-    """Outputs selected="true" when the given option is selected.
+    """Outputs selected="selected" when the given option is selected.
     """
     if option == actual_value:
-        return u'selected="true"'
+        return u'selected="selected"'
     return u''
 
 def offset(number):
