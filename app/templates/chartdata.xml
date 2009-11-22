@@ -2,7 +2,7 @@
 <chart>
 <series>
 %for t in timestamps:
-<value xid="${t}">${formatting.date_ym(t)}</value>
+<value xid="${t}">${formatting.date_ym(t, req)}</value>
 %endfor%
 </series>
 <graphs>

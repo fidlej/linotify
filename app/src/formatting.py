@@ -3,15 +3,15 @@ import time
 from src.tz import usertime
 from mako.filters import html_escape
 
-def date_ys(timestamp):
+def date_ys(timestamp, req):
     """Formats date with years up to seconds.
     """
-    return time.strftime('%Y-%m-%d %H:%M:%S', usertime(timestamp))
+    return time.strftime('%Y-%m-%d %H:%M:%S', usertime(timestamp, req))
 
-def date_ym(timestamp):
+def date_ym(timestamp, req):
     """Formats date with years up to minutes.
     """
-    return time.strftime('%Y-%m-%d %H:%M', usertime(timestamp))
+    return time.strftime('%Y-%m-%d %H:%M', usertime(timestamp, req))
 
 def point(value, precision):
     return '%.*f' % (precision, value)

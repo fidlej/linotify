@@ -7,7 +7,6 @@ def day_start(timestamp):
     #TODO: support any timezone
     return timestamp - timestamp % DAY_SECONDS
 
-def usertime(timestamp):
-    #TODO: support user defined timezones
-    return time.gmtime(timestamp)
+def usertime(timestamp, req):
+    return time.gmtime(timestamp - req.get_tzoffset_seconds())
 

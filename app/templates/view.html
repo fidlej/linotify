@@ -2,7 +2,7 @@
 
 %if last_data_at is not None:
 <p>
-Last data received: ${formatting.date_ys(last_data_at)}
+Last data received: ${formatting.date_ys(last_data_at, req)}
 <select id="tz_select" name="tz">
 %for i in xrange(-12,15):
     <option value="${-i*3600}"${formatting.select_option(req.get_tzoffset_seconds(), -i*3600)|n}>UTC${formatting.offset(i)}</option>
