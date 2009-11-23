@@ -6,7 +6,7 @@ from src import tz, store
 # The maximum number of time points on a chart.
 # It should be less than the number of pixels on a chart.
 POINTS_LIMIT = 400
-assert POINTS_LIMIT <= store.LIMIT
+assert POINTS_LIMIT <= store.LIMIT - 2  # the -2 is a rounding error
 
 def get_time_range(days, req):
     """Returns start and stop timestamps
@@ -27,8 +27,8 @@ def generate_timestamps(time_from, time_to):
         time_from = time_to - duration * POINTS_LIMIT
 
     timestamps = []
-    t = _round_upto_duration(time_from, duration)
-    while t <= time_to:
+    t = _floor_to_duration(time_from, duration)
+    while t < time_to + duration:
         timestamps.append(t)
         t += duration
     return timestamps
@@ -57,8 +57,8 @@ def get_chart_graphs(server_id, chart, timestamps):
 
     return chart.tolist(graphs)
 
-def _round_upto_duration(timestamp, duration):
-    return timestamp + timestamp % duration
+def _floor_to_duration(timestamp, duration):
+    return timestamp - timestamp % duration
 
 def _get_usable_duration(interval):
     for duration in store.STAGE_DURATIONS:
