@@ -112,6 +112,8 @@ class ServerChartdata(Handler):
         graphs = charting.get_chart_graphs(server.id(), chart, timestamps)
         self.render('chartdata.xml', timestamps=timestamps,
                 chart=chart, graphs=graphs)
+        self.response.headers.add_header('Content-Type',
+                'text/xml; charset=utf-8')
 
 class Notice(Handler):
     def get(self):
