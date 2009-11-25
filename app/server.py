@@ -77,8 +77,13 @@ class ServerAgent(Handler):
     def get(self, server_id):
         server = sane.valid_entity(model.Server, server_id)
         added = self.request.get('added') == '1'
+        if added:
+            title = u'Start sending the values'
+        else:
+            title = u'Server %s setup' % server.name
+
         self.render('agent.html',
-                title='Run our agent on %s' % server.name,
+                title=title,
                 server=server, added=added)
 
 class ServerView(Handler):

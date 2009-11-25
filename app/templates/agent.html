@@ -7,24 +7,25 @@ Server '${server.name}' was successfully added.
 %endif%
 
 <p>
-Run <a href="/static/download/linotify-agent.tar.gz">linotify-agent.tar.gz</a> on your server to send the stats.<br/>
-Use <b>serverKey: ${server.get_secret_key()}</b> in its config.cfg.
-</p>
-<h2>Agent usage</h2>
-<p>
-The Linotify agent is just a Python script. Any user can run it.<br/>
-Download it:
+A Python client is provided to send the graph values. Any user can run it.<br/>
+<b>1) Download it</b>:
 </p>
 <pre>
-wget http://www.linotify.com/static/download/linotify-agent.tar.gz
+wget <a href="http://www.linotify.com/static/download/linotify-agent.tar.gz">http://www.linotify.com/static/download/linotify-agent.tar.gz</a>
 tar xzf linotify-agent.tar.gz
 cd linotify-agent
+</pre>
+
+<p>
+<b>2) Set the server key</b> and test it:
+</p>
+<pre>
 sed -i -e 's/^serverKey.*/serverKey: ${server.get_secret_key()}/' config.cfg
 ./agent.py -v
 </pre>
 
 <p>
-Schedule it by cron to run every minute:
+<b>3) Schedule it by cron</b> to run every minute:
 </p>
 <pre>
 (crontab -l ; echo "* * * * * `pwd`/agent.py") | crontab -
@@ -32,5 +33,5 @@ Schedule it by cron to run every minute:
 
 <p>
 <br/>
-The received data will be then visible on <a href="/my/servers/view/${server.id()}">server graphs</a>.
+The received values will be then visible on <a href="/my/servers/view/${server.id()}">server graphs</a>.
 </p>

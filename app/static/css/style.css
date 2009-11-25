@@ -48,6 +48,10 @@ pre {
     font-size: 110%;
 }
 
+pre a {
+    color: white
+}
+
 /* Navigation menu */
 div.menu {
     font-size: 110%;
