@@ -21,8 +21,8 @@ def ensure_csrf_token(web_handler):
     """
     token = _get_csrf_cookie(web_handler.request)
     if not token:
-        import binascii, uuid
-        token = binascii.b2a_hex(uuid.uuid4().bytes)
+        import uuid
+        token = uuid.uuid4().hex
 
     # The cookie expiration date is postponed by every request.
     set_cookie(web_handler.response, '_csrf', token, max_age_days=30)
