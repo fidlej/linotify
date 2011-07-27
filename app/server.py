@@ -135,7 +135,9 @@ class Postback(Handler):
 
 class DbUpdate(Handler):
     def get(self):
-        self.show('Nothing to do.')
+        from src import cleaning
+        info = cleaning.remove_old_points()
+        self.show(info)
 
 class CatchAll(Handler):
     def get(self):

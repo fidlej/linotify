@@ -2,6 +2,11 @@ application: linotify-domain
 version: 3
 api_version: 1
 runtime: python
+
+builtins:
+- datastore_admin: on
+- remote_api: on
+- appstats: on  # See stats on /_ah/stats/
  
 handlers:
 - url: /favicon.ico
@@ -18,11 +23,6 @@ handlers:
   expiration: 30d
 - url: /static
   static_dir: static
-  secure: optional
-
-- url: /remote_api
-  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
-  login: admin
   secure: optional
 
 - url: /db_update
