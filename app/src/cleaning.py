@@ -11,6 +11,9 @@ PRESEVED_DAYS = 32
 
 def remove_old_points():
     server_keys = Server.all(keys_only=True)
+    if not server_keys:
+        return
+
     key = random.choice(list(server_keys))
     server_id = key.id()
 
