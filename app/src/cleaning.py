@@ -23,8 +23,8 @@ def remove_old_points():
             "select __key__ from Point where __key__ <= :outdated_key",
             outdated_key=outdated_key)
     point_keys = query.fetch(limit=1000)
-    info = "outdated points at server %s: %s" % (server_id, point_keys)
-    logging.info(info)
+    info = "outdated points at server %s: %s (e.g., %s)" % (
+            server_id, len(point_keys), point_keys[:1])
     db.delete(point_keys)
     return info
 
