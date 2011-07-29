@@ -6,6 +6,7 @@ import time
 import logging
 import wsgiref.handlers
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import users
 
 from waddon.handling import show, handle_errors
@@ -167,7 +168,7 @@ app = webapp.WSGIApplication(
 #from src.profiling import profiled
 #@profiled
 def main():
-    wsgiref.handlers.CGIHandler().run(app)
+    run_wsgi_app(app)
 
 if __name__ == '__main__':
     from pylib import autoretry
