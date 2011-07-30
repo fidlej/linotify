@@ -25,7 +25,7 @@ def remove_old_points():
     query = db.GqlQuery(
             "select __key__ from Point where __key__ <= :outdated_key",
             outdated_key=outdated_key)
-    point_keys = query.fetch(limit=1000)
+    point_keys = query.fetch(limit=500)
     info = "outdated points at server %s: %s (e.g., %s)" % (
             server_id, len(point_keys), point_keys[:1])
     logging.info(info)
